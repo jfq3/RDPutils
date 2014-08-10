@@ -2,3 +2,12 @@ RDPutils
 ========
 
 R Utilities for Processing RDPTool Output
+---
+
+The package provides means to construct phyloseq objects from the output of RDP tools for clustering and classfying DNA sequences from high-throughput amplicon sequencing projects.
+
+The Ribosomal Database Project (RDP) provides both web-based and command line tools for processing rRNA gene sequences from Bacteria, Archae, and Fungi as well as functional genes.  Web-based tools and tutorials for using them are available at (http://rdp.cme.msu.edu/index.jsp).  The command line tools are available at (https://github.com/rdpstaff/RDPTools). Processing can take either of two approaches.  In the "supervised" approach, sequences from multiple samples are binned by classifying them using a database for Bacteria or Archae or Fungi, or a user's own database, and further processing is usually done in a spreadsheet program.  In the "unsupervised" approach, sequences are clustered into OTUs based on their degree of similarity.   RDP provides additional tools to parse the cluster files into OTU tables that can be imported into R, and to retrieve representative sequences for each cluster.  
+
+Phyloseq is an R/Bioconductor package that includes a variety of wrappers for quick exploratory data analysis of sequencing data, but perhaps its most convenient feature is that it provides a means of rapid and flexible sub-setting of data from a large experiment.  A phyloseq object has slots for an OTU table, a classification table, a sample data table, and a tree of the sequences representing each OTU.  I recommend phyloseq because it organizes all data for an experiment and R because it provides a flexible means of analyzing that data.
+
+The functions in this package reformat RDP output so that it is possible to fill phyloseq slots.  In the case of the supervised approach, the RDP classifier result is reformatted directly into a phyloseq object containing an OTU table and a classification table.  For the unsupervised approach, the OTU table can be the result from the RDP R-formatter tool, or from a function in this package. The key to filling the classification table and tree slots is to rename the representative sequences to correspond to the OTU names; this package includes functions to do this.  Once renamed, the representative sequences can be classified and treed, and the results used to fill phyloseq classification table and tree slots.  For either approach, a sample data table is most easily constructed in a spreadsheet program.
