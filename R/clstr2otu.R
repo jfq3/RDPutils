@@ -3,7 +3,7 @@ function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.nam
   # Read in cluster file.
   clstr <- read.delim(file=clstr_file, header=FALSE, as.is=TRUE)
   clstr.header <- clstr[1:2, ] # Keep first 2 lines to print with subsetted cluster file.
-  
+ 
   # Make index of row numbers for each distance in cluster file.
   dist.index <- NULL
   for (n in seq(along=clstr[,1])) {
@@ -48,27 +48,16 @@ function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.nam
   
   #   Remove first 2 lines of clstr; also 4th column is not needed.
   clstr <- clstr[-c(1:2), -4]
-  
-  # Get number of clusters
-  no.clusters <- length(unique(clstr[ ,1]))
-  
-  # Get number of samples
-  no.samples <- length(unique(clstr[ ,2]))
-  
-  # Make empty OTU table; samples are rows.
-  otu <- matrix(0, no.samples, no.clusters)
-  row.names <- unique(clstr[ ,2])
-  col.names <- unique(clstr[ ,1])
-  rownames(otu) <- row.names
-  colnames(otu) <- col.names
-  
-  # Sort counts into the OTU matrix
-  for (k in 1:nrow(clstr)){
-    i <- which(row.names==clstr[k,2])
-    j <- which(col.names==clstr[k,1])
-    otu[i,j] <- clstr[k,3]
-  }
-  
+
+  # Use dcast function from package reshape2 to reformat clstr as a dataframe.
+  clstr <- clstr[,c(2,1,3)]
+  colnames(clstr) <- c("sample", "clstr_no", "value")
+  i <- as.logical(c(0,1,1))
+  clstr[i] <- lapply(clstr[i], as.integer)
+  otu <- dcast(clstr, sample ~ clstr_no, fun.aggregate=NULL, fill=0)
+  rownames(otu) <- otu[,1]
+  otu <- otu[,-1]
+  otu <- as.data.frame(t(otu))
 
 # Make otu names comparable to RDP's R-formatter tool.
   new.col.names <- make_otu_names(as.numeric(colnames(otu)))
