@@ -56,15 +56,14 @@ function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.nam
   clstr[i] <- lapply(clstr[i], as.integer)
   otu <- dcast(clstr, sample ~ clstr_no, fun.aggregate=NULL, fill=0)
   rownames(otu) <- otu[,1]
-  otu <- otu[,-1]
-  otu <- as.data.frame(t(otu))
+  otu <- otu[ , -1]
 
 # Make otu names comparable to RDP's R-formatter tool.
   new.col.names <- make_otu_names(as.numeric(colnames(otu)))
   colnames(otu) <- new.col.names
   
   # Strip common prefix and suffix from sample names (if present).
-  temp <- row.names
+  temp <- rownames(otu)
   temp <- gsub("nc_", "", temp)
   temp <- gsub("_trimmed", "", temp)
   temp <- gsub("aligned_", "", temp)
