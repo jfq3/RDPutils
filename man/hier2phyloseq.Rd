@@ -51,7 +51,7 @@ John Quensen
 }
 \examples{
 
-	hier.file <- system.file("extdata", "test_hier.txt", package="hier")
+	hier.file <- system.file("extdata", "test_hier.txt", package="RDPutils")
 	expt <- hier2phyloseq(hier_file=hier.file)
 	expt
 
