@@ -130,7 +130,7 @@ The RDP classifier can be used for multiple samples and  reports results in two 
 
 As an example:
 <<>>=
-hier.file <- system.file("extdata", "test_hier.txt", package="hier")
+hier.file <- system.file("extdata", "test_hier.txt", package="RDPutils")
 expt <- hier2phyloseq(hier_file=hier.file)
 expt
 @
