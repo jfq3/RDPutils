@@ -40,9 +40,6 @@ assoc_repseq_IDs_with_otus_by_fasta = function(repseq_file="all_seq_complete.clu
   
   # Reorder columns
   assoc.table <- assoc.table[,c(1,4,2,3)]
-  # Reorder rows
-  assoc.table <- assoc.table[order(assoc.table[,3]), ]
-  head(assoc.table)
   
 return(assoc.table)
 } # End function.

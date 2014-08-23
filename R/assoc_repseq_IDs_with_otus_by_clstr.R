@@ -6,8 +6,6 @@ function(clstr_file="dist_0.03.clust", rep_seqs=rep.seqs) {
   my.table <- matrix(0, length(rep_seqs), ncol=4)
   my.table <- as.data.frame(my.table)
   colnames(my.table) <- c("RepSeq.ID", "Cluster #", "Sample","Sequences in Sample")
-  dim(my.table) # Check
-  head(my.table) # Check
   
   # Fill in the table. Takes a while.
   for (i in (1:length(rep_seqs))){
