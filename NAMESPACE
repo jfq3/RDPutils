@@ -1,2 +1,3 @@
 exportPattern("^[[:alpha:]]+")
 import(phyloseq)
+import(reshape2)

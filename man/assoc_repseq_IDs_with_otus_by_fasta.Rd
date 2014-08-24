@@ -10,7 +10,7 @@ This function parses representative sequence IDs and makes a table
 	as given by RDPTools R-formatter or function clstr2otu in this package.
 }
 \usage{
-assoc_repseq_IDs_with_otus_by_fasta(repseq_file="repseq.fasta")
+assoc_repseq_IDs_with_otus_by_fasta(repseq_file="all_seq_complete.clust_rep_seqs.fasta")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
