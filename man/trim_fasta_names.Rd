@@ -8,7 +8,7 @@ Trim Representative Sequence Names
 This function trims the fasta IDs of the representative sequences to include only the machine name.
 }
 \usage{
-trim_fasta_names(repseq_file = "all_seq_complete.clust_rep_seqs.fasta", trimmed_names = "names_trimmed.fasta", strip = FALSE)
+trim_fasta_names(repseq_file, trimmed_names, strip = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,20 +30,8 @@ Unaligning the sequences results in a smaller file size and is acceptable if the
 \value{
 This function operates on files.  It returns a message that it has completed.  It is not normally assigned to a variable; if so, the variable contains only the message.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 John Quensen
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 
@@ -51,3 +39,6 @@ repseq.file <- system.file("extdata", "all_seq_complete.clust_rep_seqs.fasta", p
 trim_fasta_names(repseq_file = repseq.file, trimmed_names = "names_trimmed.fasta", strip = FALSE)
 
 }
+
+\keyword{RDPTools}
+

@@ -1,21 +1,24 @@
 \name{assoc_repseq_IDs_with_otus_by_fasta}
 \alias{assoc_repseq_IDs_with_otus_by_fasta}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Associate Representative Sequences with OTUs from Fasta Headers
 }
 \description{
 This function parses representative sequence IDs and makes a table 
   associating the representative sequence machine names with the OTU names 
-	as given by RDPTools R-formatter or function clstr2otu in this package.
+	as given by RDP's cluster file formatter with options "R" or "biom," or function clstr2otu in this package.
 }
 \usage{
-assoc_repseq_IDs_with_otus_by_fasta(repseq_file="all_seq_complete.clust_rep_seqs.fasta")
+assoc_repseq_IDs_with_otus_by_fasta(repseq_file="all_seq_complete.clust_rep_seqs.fasta", otu_format="R")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{repseq_file}{
 The name of the fasta file containing representative sequences.
+}
+  \item{otu_format}{
+When equal to "R" (default) OTU names have the form "OTUxxxnn."  When equal to "biom", OTU names have the form "cluster_nn."
 }
 }
 \details{
@@ -26,11 +29,9 @@ java -Xmx2g -jar $Clustering rep-seqs --one-rep-per-otu all_seq_complete.clust 0
 In these cases the fasta headers contain information on the cluster number and the size of the cluster.  This function parses this information into a table that can be used as input to function rename_fasta, which renames the representative sequences with their corresponding OTU names.
 }
 \value{
-This function returns a data frame with 4 columns: the machine name of the representative sequence, the corresponding OTU name as given by the function clstr2otu and by RDP's R-formatter tool, the cluster number, and the total number of sequences in the cluster (cluster size).
+This function returns a data frame with 4 columns: the machine name of the representative sequence, the corresponding OTU name as given by RDP's cluster file formatter with options "R" or "biom" and by function clstr2otu in this package, the cluster number, and the total number of sequences in the cluster (cluster size).
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 John Quensen
 }
@@ -56,3 +57,5 @@ repseq.file <- system.file("extdata", "all_seq_complete.clust_rep_seqs.fasta", p
 assoc.table <- assoc_repseq_IDs_with_otus_by_fasta(repseq_file=repseq.file)
 head(assoc.table)
 }
+
+\keyword{RDPTools}

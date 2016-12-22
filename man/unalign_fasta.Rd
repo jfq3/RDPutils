@@ -25,20 +25,8 @@ This function can be used to unalign renamed representative sequences in order t
 \value{
 This function operates on files.  It returns a message that it has completed.  It is not normally assigned to a variable; if so, the variable contains only the message.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 John Quensen
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 
@@ -47,3 +35,4 @@ unalign_fasta(in_file=in.file, out_file="unaligned.fasta")
 
 }
 
+\keyword{RDPTools}

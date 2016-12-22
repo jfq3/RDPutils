@@ -12,7 +12,8 @@
 
 \title{Example Workflows for the Package RDPutils}
 \author{John Quensen}
-\date{\today}
+\date{June 30, 2015}
+% \VignetteIndexEntry{Example Workflows for the Package RDPutils}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
@@ -29,6 +30,7 @@ Phyloseq is an R/Bioconductor package that includes a variety of wrappers for qu
 The functions in this package reformat RDP output so that it is possible to fill phyloseq slots.  In the case of the supervised approach, the RDP classifier result is reformatted directly into a phyloseq object containing an OTU table and a classification table.  For the unsupervised approach, the OTU table can be the result from the RDP R-formatter tool, or from a function in this package. The key to filling the classification table and tree slots is to rename the representative sequences to correspond to the OTU names; this package includes functions to do this.  Once renamed, the representative sequences can be classified and treed, and the results used to fill phyloseq classification table and tree slots.  For either approach, a sample data table is most easily constructed in a spreadsheet program.
 
 Below are example workflows for both supervised and unsupervised approaches.
+
 <<echo=FALSE, results=hide>>=
 library(RDPutils)
 @
@@ -38,12 +40,12 @@ Input to some of the functions in this package are text files read from disk, no
 clstr.file <- system.file("extdata", "all_seq_complete.clust",
                           package="RDPutils")
 otu <- clstr2otu(clstr_file=clstr.file, dist=0.03, OutFile=TRUE,
-                 file.name= "dist_03.clust")
+                 file_name= "dist_03.clust")
 @
 a user would normally type
 <<eval=FALSE>>=
 otu <- clstr2otu(clstr_file = "all_seq_complete.clust", dist = 0.03,
-                 OutFile = FALSE, file.name = "dist_03.clust")
+                 OutFile = FALSE, file_name = "dist_03.clust")
 @
 \section*{Workflow for Cluster Results}
 RDP's unsupervised method involves aligning rRNA sequences using the structure-aware Infernal aligner, calculating distances between sequences, and then clustering them, by default, by the complete linkage method.  The result is a large "clust" file giving the numbers and names of every sequence in every cluster for every sample for several distances, from 0 to 0.15 by default. The R-formatter tool parses the cluster file into tab-delimited OTU tables for each distance with samples as rows and OTUs as columns.  These can be easily imported into R with the base function \texttt{read.table}.
@@ -54,7 +56,7 @@ library(RDPutils)
 clstr.file <- system.file("extdata", "all_seq_complete.clust", 
                           package="RDPutils")
 otu <- clstr2otu(clstr_file=clstr.file, dist=0.03, 
-                 OutFile=TRUE, file.name= "dist_03.clust")
+                 OutFile=TRUE, file_name= "dist_03.clust")
 otu[ , 1:5] 
 @ 
 Here, \texttt{clstr.file} is the name of the cluster file, retrieved from the examples provided for RDPutils.  Again, normally, the user would enter the cluster file name \texttt{all\_seq\_complete.clust} within quotation marks in its place.  Since \texttt{OutFile} is \texttt{TRUE}, a cluster file for the distance 0.03 is written to the file \texttt{dist\_03.clust}.  The result, \texttt{otu}, is of course the OTU table.  The sample names have been simplified by removing common prefixes and suffixes introduced by the RDP pipeline.
@@ -77,6 +79,7 @@ If retrieved with the on-line tool, they have the form:\\
 \texttt{>HC9DO0P01BCTC4 cluster\_id=1,size=2}\\
 If retrieved with the command line tool in RDPTools, they have the form:\\
 \texttt{>HC9DO0P01BCTC4 prefered=false,cluster=0,clustsize=2}\\
+\texttt{>FTJQVTM02FQW3E  prefered=false,cluster=1,clustsize=7,maxDist=0.02917,minSumSquare=0.00191}\\
 In these cases, it is possible to make an association between the representative sequence IDs and the OTU names with the function \texttt{assoc\_repseq\_IDs\_with\_otus\_by\_fasta}:
 <<keep.source=TRUE>>=
 repseq.file <- system.file("extdata", 
@@ -137,11 +140,11 @@ expt
 This example is for 28S rRNA gene sequences and the aim is to analyze fungal communities.  Domains other than fungi have been included in the data base to improve classification.  The domains represented in the data can be determined thus:
 <<>>=
 rank_names(expt)
-unique(tax_table(expt)[ ,"domain"])
+unique(tax_table(expt)[ ,"Domain"])
 @
 The data can be subset to include only the fungal sequences thus:
 <<>>=
-fungi <- subset_taxa(expt, domain=="Fungi")
+fungi <- subset_taxa(expt, Domain=="Fungi")
 fungi
 @
 and the percentage of non-fungal sequences is determined as:

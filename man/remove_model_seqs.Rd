@@ -38,3 +38,5 @@ in.file <- system.file("extdata", "all_seq_complete.clust_rep_seqs.fasta", packa
 remove_model_seqs(in_file=in.file, out_file = file2tree.fasta)
 
 }
+
+\keyword{RDPTools}

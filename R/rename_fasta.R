@@ -1,5 +1,5 @@
 rename_fasta <-
-function(in_file="names_trimmed.fasta", out_file="renamed.fasta", rename_table=assoc.table) {
+function(in_file="names_trimmed.fasta", out_file="renamed.fasta", rename_table) {
   # Read in fasta file as text file.
   fasta <- readLines(in_file)
   # Rename the fasta files with corresponding OTU name taken from rename_table

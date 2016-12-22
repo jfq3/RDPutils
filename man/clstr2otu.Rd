@@ -9,7 +9,7 @@ Parses a cluster file into an otu table with samples as rows and OTUs as columns
 
 }
 \usage{
-clstr2otu(clstr_file = "all_seq_complete.clust", dist = 0.03, OutFile = FALSE, file.name = "dist_03.clust")
+clstr2otu(clstr_file = "all_seq_complete.clust", dist = 0.03, OutFile = FALSE, file_name = "dist_03.clust", otu_format="R")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,17 +22,23 @@ dist is the maximum distance between sequences in the same cluster.  An OTU tabl
   \item{OutFile}{
 A logical.  If OutFile is TRUE, then a cluster file is written to disk for the single distance given by dist.  Default = FALSE.
 }
-  \item{file.name}{
+  \item{file_name}{
 The name of the cluster file written to disk if OutFile is TRUE.  Otherwise ignored.
+}
+  \item{otu_format}{
+When equal to "R" (default) OTU names have the form "OTUxxxnn."  When equal to "biom", OTU names have the form "cluster_nn."
 }
 }
 \details{
 This function can take several minutes, depending on the number of OTUs and samples.  The cluster file for a single distance output by the function can be used to associate the OTU names in the OTU table produced with the representative sequence machine names.
+
+The sample names are shortened by removing common prefixes and suffixes introduced by RDP's tools.  These include "nc_", "aligned_", "_trimmed", ".fasta" and ".fastq."
+
+The two OTU formats correspond to those output by the RDP's cluster file formatter, which has the options "R"" and "biom."  With option "R," OTU names begin with "OTU" and are padded to equal length with leading zeros, e.g. "OTU00067."  Thus they can be sorted in numerical order.  With option "biom," OTU names begin with "cluster_" and are not padded with leading zeros, e.g "cluster_67." 
 }
 \value{
 Returns a numerical data frame, or OTU table, where samples are rows and OTUs are columns.  This is the convention used by vegan.  To import the result into phyloseq, it should first be transposed and converted to class matrix.
 
-The sample names are shortened by removing common prefixes and suffixes introduced by RDP's tools.  These include "nc_", "aligned_", "_trimmed", and ".fasta."
 }
 \references{
 RDP web-based clustering services and tutorials on clustering sequence data are available at: http://rdp.cme.msu.edu/
@@ -48,6 +54,9 @@ John Quensen
 \examples{
 
 clstr.file <- system.file("extdata", "all_seq_complete.clust", package="RDPutils")
-otu <- clstr2otu(clstr_file=clstr.file, dist=0.03, OutFile=TRUE, file.name= "dist_03.clust")
+otu <- clstr2otu(clstr_file=clstr.file, dist=0.03, OutFile=TRUE, file_name= "dist_03.clust")
 otu[ , 1:5]
 }
+
+\keyword{RDPTools}
+

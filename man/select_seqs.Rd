@@ -30,20 +30,8 @@ Reducing the number of representative sequences in this manner makes several sub
 \value{
 This function operates on disk files.  It is not normally assigned to a variable.  It returns a message that it has completed.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 John Quensen
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 renamed.fasta <- system.file("extdata", "renamed.fasta", package="RDPutils")
@@ -53,3 +41,6 @@ select.list <- colnames(otu)
 select_seqs(in_file=renamed.fasta, select_list=select.list, out_file="subset.renamed.repseqs.fasta")
 
 }
+
+\keyword{RDPTools}
+

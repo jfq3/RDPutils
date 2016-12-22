@@ -8,7 +8,7 @@ Rename Representative Sequences
 This function renames representative sequences from their machine names to their OTU names.
 }
 \usage{
-rename_fasta(in_file = "names_trimmed.fasta", out_file = "renamed.fasta", rename_table = assoc.table)
+rename_fasta(in_file = "names_trimmed.fasta", out_file = "renamed.fasta", rename_table)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,18 +30,9 @@ Before representative sequences can be renamed with this function, their IDs hav
 \value{
 A fasta file with renamed representative sequences is written to disk. This function is not normally assigned to a variable.  The function returns a message that it has completed.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 John Quensen
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link{assoc_repseq_IDs_with_otus_by_clstr}}
 
@@ -54,3 +45,5 @@ in.file <- system.file("extdata", "names_trimmed.fasta", package="RDPutils")
 data(assoc.table)
 rename_fasta(in_file = in.file, out_file = "renamed.fasta", rename_table = assoc.table)
 }
+
+\keyword{RDPTools}

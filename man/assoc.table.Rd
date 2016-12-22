@@ -9,3 +9,4 @@ This association table is a data frame for use in the example for the rename_fas
 \format{A data frame with 443 rows and 4 columns.}
 
 \keyword{datasets}
+\keyword{RDPTools}

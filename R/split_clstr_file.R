@@ -5,18 +5,9 @@ function(clstr_file="all_seq_complete.clust", file.prefix="dist_") {
   cluster.header <- clust[1:2, ] # Keep first 2 lines to print with subsetted cluster file.
   
   # Make index of row numbers for each distance in cluster file.
-  dist.index <- NULL
-  for (n in seq(along=clust[,1])) {
-    if (clust[n,1] == "distance cutoff:") {
-      temp <- c(n, clust[n,2])
-      dist.index <- rbind(dist.index, temp)
-    }
-  }
-  rownames(dist.index) <- NULL
-  dist.index[] <- lapply(dist.index, as.numeric)
-  dim(dist.index) <- c(length(dist.index)/2, 2)
-  dist.index <- as.data.frame(dist.index)
-  colnames(dist.index) <- c("line.no", "distance")
+  line.no <- which(clust[ , 1]=="distance cutoff:")
+  distance <- clust[line.no, 2]
+  dist.index <- data.frame(line.no, distance)  
   
   # Get first and last row numbers for chosen distance.
  for (n in 1:nrow(dist.index)) {

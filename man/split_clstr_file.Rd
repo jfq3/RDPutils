@@ -25,18 +25,9 @@ Output files have names of the form prefix0.nn.clust where nn is the decimal dis
 \value{
 This function operates on files.  It returns a message when it has completed.  It is not normally assigned to a variable; if so, the variable contains only the message.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 John Quensen
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link{clstr2otu}}
 
@@ -48,3 +39,5 @@ clstr.file <- system.file("extdata", "all_seq_complete.clust", package="RDPutils
 split_clstr_file(clstr_file = clstr.file, file.prefix = "dist_")
 
 }
+
+\keyword{RDPTools}

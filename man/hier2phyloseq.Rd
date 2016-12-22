@@ -29,20 +29,19 @@ All sample fasta files in directory c:\\test are classified to a rank with confi
 
 hier2phyloseq converts the hierachical result, file test_hier.txt in the example above, to a phyloseq object with otu_table and tax_table.  Empty ranks are filled as unclassifed higher rank.  For example, the family and genus assigned to sequences classified with confidence greater than 0.5 only as far as order "Pleosporales"" would be "unclass_Pleosporales."
 
+The sample names are shortened by removing common prefixes and suffixes introduced by RDP's tools.  These include "nc_", "aligned_", "_trimmed", ".fasta" and ".fastq."
+
 This function is not appropriate for processing a single sample.  To make a tax_table phyloseq object, use function "make_tax_table."
+
 }
 \value{
 Returns a phyloseq object with otu_table and tax_table.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 John Quensen
 }
-\note{
-%%  ~~further notes~~
-}
+
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -56,3 +55,5 @@ John Quensen
 	expt
 
 }
+
+\keyword{RDPTools}

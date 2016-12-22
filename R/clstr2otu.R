@@ -1,23 +1,14 @@
 clstr2otu <-
-function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.name="dist_03.clust") {
+function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file_name="dist_03.clust", otu_format="R") {
   # Read in cluster file.
   clstr <- read.delim(file=clstr_file, header=FALSE, as.is=TRUE)
   clstr.header <- clstr[1:2, ] # Keep first 2 lines to print with subsetted cluster file.
  
   # Make index of row numbers for each distance in cluster file.
-  dist.index <- NULL
-  for (n in seq(along=clstr[,1])) {
-    if (clstr[n,1] == "distance cutoff:") {
-      temp <- c(n, clstr[n,2])
-      dist.index <- rbind(dist.index, temp)
-    }
-  }
-  rownames(dist.index) <- NULL
-  dist.index[] <- lapply(dist.index, as.numeric)
-  dim(dist.index) <- c(length(dist.index)/2, 2)
-  dist.index <- as.data.frame(dist.index)
-  colnames(dist.index) <- c("line.no", "distance")
-  
+  line.no <- which(clstr[ , 1]=="distance cutoff:")
+  distance <- clstr[line.no, 2]
+  dist.index <- data.frame(line.no, distance)
+
   # Get first and last row numbers for chosen distance.
   # Return error message if requested distance is not present.
   # Check for maximum distance in dist.index
@@ -42,7 +33,7 @@ function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.nam
   # If enabled, write this subsetted cluster file to disk.
   if (OutFile==TRUE) {
     cluster <- rbind(clstr.header, clstr)
-    write.table(cluster, file=file.name, sep="\t", col.names=FALSE, row.names=FALSE)
+    write.table(cluster, file=file_name, sep="\t", col.names=FALSE, row.names=FALSE)
     rm(cluster)
   }
   
@@ -59,7 +50,7 @@ function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.nam
   otu <- otu[ , -1]
 
 # Make otu names comparable to RDP's R-formatter tool.
-  new.col.names <- make_otu_names(as.numeric(colnames(otu)))
+  new.col.names <- make_otu_names(as.numeric(colnames(otu)), otu_format)
   colnames(otu) <- new.col.names
   
   # Strip common prefix and suffix from sample names (if present).
@@ -68,6 +59,7 @@ function(clstr_file="all_seq_complete.clust", dist=0.03, OutFile=FALSE, file.nam
   temp <- gsub("_trimmed", "", temp)
   temp <- gsub("aligned_", "", temp)
   temp <- gsub(".fasta","", temp)
+  temp <- gsub(".fastq","", temp)
   rownames(otu) <- temp
   otu <- otu[order(rownames(otu)), ]
   otu <- otu[ , order(colnames(otu))]

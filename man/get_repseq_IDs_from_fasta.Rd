@@ -39,3 +39,5 @@ rep.seqs <- get_repseq_IDs_from_fasta(repseq_file = repseq.file)
 rep.seqs
 
 }
+
+\keyword{RDPTools}

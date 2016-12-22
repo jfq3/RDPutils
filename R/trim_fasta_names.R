@@ -1,6 +1,5 @@
 trim_fasta_names <-
-function(repseq_file="all_seq_complete.clust_rep_seqs.fasta", 
-                            trimmed_names="names_trimmed.fasta", strip=FALSE) {
+function(repseq_file, trimmed_names, strip=FALSE) {
   # Read in fasta file as a text file.
   fasta <- readLines(repseq_file)
   for (i in seq(fasta)) {

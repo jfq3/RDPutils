@@ -1,5 +1,5 @@
 assoc_repseq_IDs_with_otus_by_clstr <-
-function(clstr_file="dist_0.03.clust", rep_seqs=rep.seqs) {
+function(clstr_file, rep_seqs, otu_format="R") {
   clstr.file <- read.table(file=clstr_file, stringsAsFactors=FALSE, header=FALSE,  sep="\t", fill=TRUE)
   
   # Create empty data frame of proper dimensions.
@@ -22,7 +22,7 @@ function(clstr_file="dist_0.03.clust", rep_seqs=rep.seqs) {
   my.table[i] <- lapply(my.table[i], as.numeric)
   
   # Add column of OTU names.
-  my.table$OTU <- make_otu_names(my.table[,2])
+  my.table$OTU <- make_otu_names(my.table[,2], otu_format)
   my.table <- my.table[, c(1,5,2,3,4)]
   i <- c(F,T,F,F,F)
   my.table[i] <- lapply(my.table[i], as.character)

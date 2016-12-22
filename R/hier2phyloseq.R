@@ -7,12 +7,18 @@ hier2phyloseq = function(hier_file="test_hier.txt") {
   colnames(taxa) <- taxa[1,]
   taxa <- taxa[-1,]
   
-  # Subset rows of taxa to those with rank= genus or empty
-  taxa <- taxa[taxa$rank %in% c("genus", ""), ]
+  all.ranks <- unique(taxa$rank)
+  possible.ranks <- c("rootrank", "kingdom", "domain","phylum","class", "order", "family", "genus", "species", "Rootrank", "Kingdom", "Domain","Phylum","Class", "Order", "Family", "Genus", "Species")
+  actual.ranks <- intersect(all.ranks, possible.ranks)
+  n.ranks <- length(actual.ranks)
+  last.rank <- actual.ranks[n.ranks]
+  
+  # Subset rows of taxa to those with lowest rank or empty
+  taxa <- taxa[taxa$rank %in% c(last.rank, ""), ]
   
   # Make empty classification table.
-  my.table <- matrix("", ncol=7, nrow=nrow(taxa))
-  colnames(my.table) <- c("rootrank", "domain","phylum","class", "order", "family", "genus")
+  my.table <- matrix("", n.ranks, nrow=nrow(taxa))
+  colnames(my.table) <- actual.ranks
   rownames(my.table) <- paste("ID_", as.character(taxa[,1]), sep="")
     
   # Fill in classification table with rank names from taxa.
@@ -38,6 +44,10 @@ hier2phyloseq = function(hier_file="test_hier.txt") {
       }
     }
   }
+  
+  # Make sure rank names are capitalized.
+  rank.names <- sapply(rank.names, simple_cap)
+  colnames(my.table) <- rank.names
 
   # Make phyloseq object containing OTU table and taxonomy table
   otu <- taxa[ , -c(1:4)]
@@ -50,6 +60,7 @@ hier2phyloseq = function(hier_file="test_hier.txt") {
   sam.names <- gsub("_trimmed", "", sam.names, fixed=TRUE)
   sam.names <- gsub("aligned_", "", sam.names, fixed=TRUE)
   sam.names <- gsub(".fasta","", sam.names, fixed=TRUE)
+  sam.names <- gsub(".fastq","", sam.names, fixed=TRUE)
   sam.names <- gsub("_",".", sam.names, fixed=TRUE)
   colnames(otu) <- sam.names
 

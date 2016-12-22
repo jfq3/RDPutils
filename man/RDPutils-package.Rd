@@ -16,8 +16,8 @@ Phyloseq is a Bioconductor/R package that provides a convenient way of organizin
 \tabular{ll}{
 Package: \tab RDPutils\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2014-05-18\cr
+Version: \tab 1.2.2\cr
+Date: \tab 2015-06-30\cr
 License: \tab GPL-2\cr
 }
 
