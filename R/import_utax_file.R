@@ -12,6 +12,8 @@ import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
   }
   n.ranks <- max(n.ranks)
   # Modify taxonomy field.
+  # Delete quotation marks
+  taxa <- gsub('"', '', taxa)
   # Delete closing parenthesis
   taxa <- gsub(')', '', taxa)
   # Substitute commma for opening parenthesis.
@@ -19,20 +21,30 @@ import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
   # Subsitute underscore for colon
   taxa <- gsub(':', '_', taxa)
   # Create data frame with ranks and confidences in separate columns.
-  class.table <- matrix(data = NA, nrow = length(otus), ncol = 2*n.ranks-1)
+  class.table <- matrix(data = NA, nrow = length(otus), ncol = 2*n.ranks)
+  # utax output is not consistent. Sometimes there is no confidence value
+  # for the highest rank. This for loop with if/else is how I handled it.
   for (i in 1:nrow(class.table)) {
     taxa.line <- strsplit(taxa[i], ',')
-    for (j in 1:length(taxa.line[[1]])) {
-      class.table[i, j] <- taxa.line[[1]][j]
+    if (!(substr(taxa.line[[1]], 1, 2)[2] %in% c("0.", "1.", NA))) {
+      class.table[i, 1] <- taxa.line[[1]][1]
+      class.table[i, 2] <- "1.0"
+      for (j in 2:length(taxa.line[[1]])) {
+        class.table[i, j+1] <- taxa.line[[1]][j]
+      }
+    } else {
+      for (j in 1:length(taxa.line[[1]])) {
+        class.table[i, j] <- taxa.line[[1]][j]
+      }
     }
   }
   
-  if (all(is.na(class.table[ , (2*n.ranks)-1]))) {
-    class.table <- class.table[ , -c(2*n.ranks-1,n.ranks)]
+  if (all(is.na(class.table[ , (2*n.ranks)]))) {
+    class.table <- class.table[ , -c(2*n.ranks-1, 2*n.ranks)]
   }
-
+  
   #Create a vector designating confidence columns.
-  conf.col.no <- seq(from=3, to=ncol(class.table), by=2)
+  conf.col.no <- seq(from=2, to=ncol(class.table), by=2)
   
   # Convert these columns to numeric
   class.table <- as.data.frame(class.table)
@@ -40,7 +52,7 @@ import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
   class.table[conf.col.no] <- lapply(class.table[conf.col.no], as.numeric)
   
   # Create a vector designating taxa columns.
-  taxa.col.no <- c(1, seq(from=2, to=ncol(class.table), by=2))
+  taxa.col.no <- c(seq(from=1, to=ncol(class.table), by=2))
   
   # Convert these columns to character.
   class.table[taxa.col.no] <- lapply(class.table[taxa.col.no], as.character)
@@ -55,14 +67,14 @@ import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
     }
   }
   
-  # Replace IDs where second highest rank is unidentfied.
+  # Replace IDs where highest rank is unidentfied.
   for (i in  1:nrow(class.table)) {
-    if (class.table[i, 3] < confidence) {
-      class.table[i, 3] <- 1
-      class.table[i, 2] <- paste("uncl_", class.table[i, 1], sep="")
+    if (class.table[i, 2] < confidence) {
+      class.table[i, 2] <- 1
+      class.table[i, 1] <- paste("uncl_", class.table[i, 1], sep="")
     }
   }
-
+  
   # Replace IDs where confidence is less than specified confidence:
   # col.no <- seq(from=3, to=ncol(class.table)-1, by=2)
   for (i in 1:nrow(class.table)) {
