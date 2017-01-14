@@ -22,27 +22,16 @@ The USEARCH usearch_global function has an option to output an OTU table with ta
 \value{
 A phyloseq object with otu_table and tax_table.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 John Quensen
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 ##---- Not run. ----
 ##-- expt <- import_otutab_taxa(in_file = "otutab_taxa_03.txt")
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ USEARCH }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{ USEARCH }
+
