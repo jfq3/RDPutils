@@ -1,6 +1,6 @@
 \name{import_itagger_otutab_taxa}
 \alias{import_itagger_otutab_taxa}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Import iTagger File
 }
@@ -10,34 +10,24 @@ Converts the tab-delimited iTagger otu.tax.tsv file into a phyloseq object with 
 \usage{
 import_itagger_otutab_taxa(in_file)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{in_file}{
 otu.tax.tav file
 }
 }
 \details{
-The iTagger otu.tax.tsv file is similar to legacy QIIME format. This function expects 6 ranks: Kingdom, Phylum, Class, Order, Family, and Genus. The taxonomy field in otu.tax.tsv is parsed on semicolons.
+The iTagger otu.tax.tsv file is similar to legacy QIIME format. This function expects six ranks: Kingdom, Phylum, Class, Order, Family, and Genus. The taxonomy field in otu.tax.tsv is parsed on semicolons.
 }
 \value{
 A phyloseq object with OTU and taxonomy tables.
-%% ...
+
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 John Quensen
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 ##---- Not run. ----
 ##-- expt <- import_itagger_otutab_taxa(in_file = "iTagger_otutab_taxa_file.txt")
@@ -76,7 +66,6 @@ function (in_file)
     return(expt)
   }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ iTagger }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
