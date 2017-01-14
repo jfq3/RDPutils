@@ -1,6 +1,6 @@
 \name{import_sintax_file}
 \alias{import_sintax_file}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Import sintax Taxonomy File
 }
@@ -10,7 +10,7 @@ Converts the tab-delimited output of USEARCH's (version 9+) sintax command to a 
 \usage{
 import_sintax_file(in_file, confidence = 0.8)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{in_file}{
     A sintax file.
@@ -31,21 +31,11 @@ Edgar, R.C. (2016), SINTAX, a simple non-Bayesian taxonomy classifier for 16S an
 \author{
 John Quensen
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 ##---- Not run. ----
 ##-- import_sintax_file(in_file="sintax_result.txt", confidence = 0.8)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ USEARCH }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{ USEARCH }
