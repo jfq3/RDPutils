@@ -32,7 +32,7 @@ John Quensen
 
 \examples{
 ##---- Not run. ----
-##-- expt <- import_usearach_biome(infile = "otutab_taxa_03.json")
+##-- expt <- import_usearch_biome(infile = "otutab_taxa_03.json")
 
 ## The function is currently defined as
 import_usearch_biome_file <- function(in_file) {
