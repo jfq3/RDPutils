@@ -22,7 +22,6 @@ hier2phyloseq = function(hier_file="test_hier.txt") {
   # Make empty classification table.
   my.table <- matrix("", n.ranks, nrow=nrow(taxa))
   colnames(my.table) <- actual.ranks
-  # rownames(my.table) <- paste("ID_", as.character(taxa[,1]), sep="")
   rownames(my.table) <- rownames(taxa)
     
   # Fill in classification table with rank names from taxa.
@@ -55,7 +54,6 @@ hier2phyloseq = function(hier_file="test_hier.txt") {
 
   # Make phyloseq object containing OTU table and taxonomy table
   otu <- taxa[ , -c(1:4)]
-  # rownames(otu) <- paste("ID_", as.character(taxa[,1]), sep="")
   rownames(otu) <- rownames(taxa)
   otu[] <- lapply(otu, as.numeric)
   
