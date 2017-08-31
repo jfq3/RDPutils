@@ -33,7 +33,7 @@ assoc_repseq_IDs_with_otus_by_fasta = function(repseq_file="all_seq_complete.clu
     # Add column names.
     colnames(assoc.table) <- c("RepSeq.ID", "Cluster #", "Cluster size", "MaxDist", "minSS")
     # Add OTU names
-    assoc.table$OTU <- as.character(make_otu_names(assoc.table[,2]), otu_format)
+    assoc.table$OTU <- as.character(make_otu_names(assoc.table[,2], otu_format))
     # Reorder columns
     assoc.table <- assoc.table[,c(1,6,2,3,4,5)]
   }
@@ -55,7 +55,7 @@ assoc_repseq_IDs_with_otus_by_fasta = function(repseq_file="all_seq_complete.clu
     # Add column names.
     colnames(assoc.table) <- c("RepSeq.ID", "Cluster #", "Cluster size")
     # Add OTU names
-    assoc.table$OTU <- as.character(make_otu_names(assoc.table[,2]))
+    assoc.table$OTU <- as.character(make_otu_names(assoc.table[,2], otu_format))
     # Reorder columns
     assoc.table <- assoc.table[,c(1,4,2,3)]
   }
