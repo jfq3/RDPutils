@@ -16,6 +16,7 @@ function(in_file, out_file) {
   for (i in seq(fasta)) {
     if (i %% 2 == 0) {
       fasta[i] <- gsub("[^agctAGCT]", "", fasta[i], perl=TRUE)
+      fasta[i] <- toupper(fasta[i])
     }
     writeLines(fasta[i], con)
   }
