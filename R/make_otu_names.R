@@ -17,10 +17,12 @@ function(otu_nums, otu_format="R") {
       }
       new.clstr.name[i,1] <- paste("OTU_", pad, as.character(otu_nums[i]), sep="")
     }
-  } else {
+  } else if (otu_format == "biom") {
     for (i in 1:length(otu_nums)) {
       new.clstr.name[i,1] <- paste("cluster_", as.character(otu_nums[i]), sep="")
     }
+  } else {
+    return("otu_format not recognized")
   }
 
   return(new.clstr.name)
