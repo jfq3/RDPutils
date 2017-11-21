@@ -1,12 +1,11 @@
 Package: RDPutils
 Type: Package
 Title: R Utilities for Processing RDPTool Output
-Version: 1.3.1
+Version: 1.3.2
 Date: 2016-12-14
 Author: John Quensen
 Maintainer: John Quensen <quensenj@msu.edu>
-Depends: phyloseq, reshape2
-Suggests: Biostrings
+Depends: phyloseq, reshape2, Biostrings
 Description: Parses OTU tables from RDP cluster files; associates OTU 
   names with representative sequences; renames 
   representative sequences with OTU names; converts RDP and USEARCH classifier 

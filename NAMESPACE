@@ -1,3 +1,5 @@
 exportPattern("^[[:alpha:]]+")
 import(phyloseq)
 import(reshape2)
+importFrom(Biostrings, readDNAStringSet)
+importFrom(Biostrings, readAAStringSet)
