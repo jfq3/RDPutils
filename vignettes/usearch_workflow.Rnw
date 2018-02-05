@@ -22,8 +22,6 @@
 
 \section*{Introduction}
 
-Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The \texttt{UPARSE} pipeline implemented in \texttt{USEARCH} is an attractive alternative method because of its much greater speed and smaller memory requirements.  \texttt{RDPutils} version 1.3 adds several functions for importing\texttt{ USEARCH/UPARSE} output as \texttt{phyloseq} otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
-
 Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The \texttt{UPARSE} pipeline implemented in \texttt{USEARCH} is an attractive alternative method because of its much greater speed and smaller memory requirements.  \texttt{RDPutils} version 1.3 adds several functions for importing \texttt{USEARCH/UPARSE} output as \texttt{phyloseq} otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
 
 \texttt{USEARCH} is available as a free 32-bit version and a paid 64-bit version. The 32-bit version has a 4 Gb memory limit which prevents dereplicating and clustering data from larger experiments. Presently the latest 64-bit version available on MSU's HPCC is 8.1, so I have written the script below to be run with\texttt{ USEARCH 8.1} with one exception. For comparison, I have included classification using the \texttt{sintax} command new beginning with \texttt{USEARCH} version 9. The memory requirement for classification is small enough that the 32-bit version of the program can be used. 
@@ -96,7 +94,6 @@ FastTree -nt -gtr < aligned_otus_03.fasta > usearch_03_tree.nwk
 The OTU table can be imported in several ways. The file containing only the OTU table can be read in with the base \texttt{read.table} function, but the argument \texttt{comment.char = ""} must be included in order to ignore the leading \# in the first line. It can then be converted to a \texttt{phyloseq otu\_table} with \texttt{phyloseq}'s \texttt{otu\_table} function.  
 
 <<>>=
-setwd("C:/R_My_Packages/RDPutils/vignettes")
 suppressWarnings(suppressMessages(library(phyloseq)))
 suppressWarnings(suppressMessages(library(RDPutils)))
 suppressWarnings(suppressMessages(library(Biostrings)))
