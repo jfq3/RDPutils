@@ -162,7 +162,7 @@ class(u_tax)
 Taxonomy tables created with \texttt{USEARCH}'s sintax function are imported with \texttt{import\_sintax\_file}. The confidence level is chosen on import. It is 0.8 by default.  
 
 <<>>=
-sintax.table.file <- system.file("extdata", "sin_tax_table.txt", package = "RDPutils")
+sintax.table.file <- system.file("extdata", "sintax_tax_table.txt", package = "RDPutils")
 
 s_tax <- import_sintax_file(in_file = sintax.table.file, confidence = 0.8)
 head(s_tax)
@@ -205,11 +205,11 @@ seq.file <- system.file("extdata", "otus_03.fa", package = "RDPutils")
 my_seqs <- readDNAStringSet(seq.file, format = "fasta")
 my_seqs
 
-usearch.tree.file <- system.file("extdata", "sam.data.txt", package = "RDPutils")
+usearch.tree.file <- system.file("extdata", "usearch_03_tree.nwk", package = "RDPutils")
 my_tree <- read_tree(usearch.tree.file, errorIfNULL = TRUE)
 my_tree
 
-sam.data.file <- system.file("ext.data", "sam.data.txt", package = "RDPutils")
+sam.data.file <- system.file("extdata", "sam.data.txt", package = "RDPutils")
 sam.data <- read.table(file = sam.data.file, header = TRUE, row.names = 1, sep = "\t")
 my_sam <- sample_data(sam.data, errorIfNULL = TRUE)
 
