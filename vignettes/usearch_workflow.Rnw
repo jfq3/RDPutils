@@ -205,9 +205,11 @@ seq.file <- system.file("extdata", "otus_03.fa", package = "RDPutils")
 my_seqs <- readDNAStringSet(seq.file, format = "fasta")
 my_seqs
 
-my_tree <- read_tree("usearch_03_tree.nwk", errorIfNULL = TRUE)
+usearch.tree.file <- system.file("extdata", "sam.data.txt", package = "RDPutils")
+my_tree <- read_tree(usearch.tree.file, errorIfNULL = TRUE)
 my_tree
 
+sam.data.file <- system.file("ext.data", "sam.data.txt", package = "RDPutils")
 sam.data <- read.table(file = "sam.data.txt", header = TRUE, row.names = 1, sep = "\t")
 my_sam <- sample_data(sam.data, errorIfNULL = TRUE)
 
