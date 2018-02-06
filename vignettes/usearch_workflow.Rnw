@@ -124,7 +124,7 @@ parse_taxonomy_usearch <- function (char.vec){
 biom.file <- system.file("extdata", "otu_03_table_only.json",
                         package="RDPutils")
 
-otu <- import_biom(BIOMfilename = "otu_03_table_only.json", parseFunction = parse_taxonomy_usearch)
+otu <- import_biom(BIOMfilename = biom.file, parseFunction = parse_taxonomy_usearch)
 head(otu)
 class(otu)
 @
