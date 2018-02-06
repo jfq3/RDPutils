@@ -97,7 +97,9 @@ The OTU table can be imported in several ways. The file containing only the OTU 
 suppressWarnings(suppressMessages(library(phyloseq)))
 suppressWarnings(suppressMessages(library(RDPutils)))
 suppressWarnings(suppressMessages(library(Biostrings)))
-otu <- read.table(file = "otu_03_table_only.txt", header = TRUE, row.names = 1, 
+otu.file <- system.file("extdata", "otu_03_table_only.txt",
+                        package="RDPutils")
+otu <- read.table(file = otu.file, header = TRUE, row.names = 1, 
                   sep = '\t', comment.char = "")
 head(otu)
 my_otu <- otu_table(otu, taxa_are_rows = TRUE, errorIfNULL = TRUE)
@@ -107,7 +109,7 @@ class(my_otu)
 The same file can also be read in with the \texttt{RDPutils} function \texttt{import\_otutab\_taxa} function.  
 
 <<>>=
-otu <- import_otutab_taxa(in_file = "otu_03_table_only.txt")
+otu <- import_otutab_taxa(in_file = otu.file)
 head(otu)
 class(otu)
 @
@@ -118,6 +120,10 @@ The \texttt{biom} file containing only the OTU table can be read in with \texttt
 parse_taxonomy_usearch <- function (char.vec){
   parse_taxonomy_default(strsplit(char.vec, ",", TRUE)[[1]])
 }
+
+biom.file <- system.file("extdata", "otu_03_table_only.json",
+                        package="RDPutils")
+
 otu <- import_biom(BIOMfilename = "otu_03_table_only.json", parseFunction = parse_taxonomy_usearch)
 head(otu)
 class(otu)
@@ -130,7 +136,9 @@ class(otu)
 Import the taxonomy table made with the RDP classifier with the \texttt{make\_tax\_table} function. It returns a \texttt{phyloseq tax\_table object}. The confidence level is chosen on import. It is 0.5 by default.    
 
 <<>>=
-rdp_tax <- make_tax_table(in_file = "rdp_classified_03.txt", confidence = 0.8)
+rdp.class.file <- system.file("extdata", "rdp_classified_03.txt", package = "RDPutils")
+
+rdp_tax <- make_tax_table(in_file = rdp.class.file, confidence = 0.8)
 head(rdp_tax)
 rank_names(rdp_tax)
 taxa_names(rdp_tax)
@@ -142,7 +150,9 @@ class(rdp_tax)
 Taxonomy tables created with \texttt{USEARCH}'s utax function are imported with \texttt{import\_utax\_file}. The confidence level is chosen on import. It is 0.8 by default.  
 
 <<>>=
-u_tax <- import_utax_file(in_file = "utax_tax_table_03.txt", confidence = 0.8)
+utax.table.file <- system.file("extdata", "utax_tax_table_03.txt", package = "RDPutils")
+
+u_tax <- import_utax_file(in_file = utax.table.file, confidence = 0.8)
 head(u_tax)
 class(u_tax)
 @
@@ -152,7 +162,9 @@ class(u_tax)
 Taxonomy tables created with \texttt{USEARCH}'s sintax function are imported with \texttt{import\_sintax\_file}. The confidence level is chosen on import. It is 0.8 by default.  
 
 <<>>=
-s_tax <- import_sintax_file(in_file = "sintax_tax_table.txt", confidence = 0.8)
+sintax.table.file <- system.file("extdata", "sin_tax_table.txt", package = "RDPutils")
+
+s_tax <- import_sintax_file(in_file = sintax.table.file, confidence = 0.8)
 head(s_tax)
 class(s_tax)
 @
@@ -164,7 +176,9 @@ class(s_tax)
 Import the tab-delimited \texttt{otutab\_taxa} file:  
 
 <<>>=
-otu_tax <- import_otutab_taxa(in_file = "otu_03_tax_table.txt")
+otu.tab.tax.file <- system.file("extdata", "otu_03_tax_table.txt", package = "RDPutils")
+
+otu_tax <- import_otutab_taxa(in_file = otu.tab.tax.file)
 otu_tax
 head(otu_table(otu_tax))
 head(tax_table(otu_tax))
@@ -173,7 +187,9 @@ head(tax_table(otu_tax))
 Import a \texttt{biom} file with both OTU and taxonomy tables.  
 
 <<eval=FALSE>>=
-biom_otu_tax <- import_biom("otu_03_tax_table.json", parseFunction = parse_taxonomy_usearch)
+biom.otu.tax.file <- system.file("extdata", "otu_03_tax_table.json", package="RDPutils")
+
+biom_otu_tax <- import_biom(biom.otu.tax.file, parseFunction = parse_taxonomy_usearch)
 biom_otu_tax
 @
 
@@ -184,7 +200,9 @@ For \texttt{USEARCH} processed data, reference sequences can always be included 
 An experiment-level \texttt{phyloseq} object is assembled from its component data with the \texttt{phyloseq} constructor, as below:  
 
 <<>>=
-my_seqs <- readDNAStringSet("otus_03.fa", format = "fasta")
+seq.file <- system.file("extdata", "otus_03.fa", package = "RDPutils")
+
+my_seqs <- readDNAStringSet(seq.file, format = "fasta")
 my_seqs
 
 my_tree <- read_tree("usearch_03_tree.nwk", errorIfNULL = TRUE)
