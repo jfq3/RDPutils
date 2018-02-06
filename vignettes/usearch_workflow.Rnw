@@ -210,7 +210,7 @@ my_tree <- read_tree(usearch.tree.file, errorIfNULL = TRUE)
 my_tree
 
 sam.data.file <- system.file("ext.data", "sam.data.txt", package = "RDPutils")
-sam.data <- read.table(file = "sam.data.txt", header = TRUE, row.names = 1, sep = "\t")
+sam.data <- read.table(file = sam.data.file, header = TRUE, row.names = 1, sep = "\t")
 my_sam <- sample_data(sam.data, errorIfNULL = TRUE)
 
 expt <- phyloseq(my_otu, my_sam, s_tax, my_tree, my_seqs)
