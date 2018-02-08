@@ -13,7 +13,6 @@
 \title{Example Workflows for the Package RDPutils}
 \author{John Quensen}
 \date{June 30, 2015}
-# % \VignetteIndexEntry{Example Workflows for the Package RDPutils}
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}

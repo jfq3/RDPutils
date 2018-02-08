@@ -13,8 +13,11 @@
 \title{Example Workflows with USEARCH Output}
 \author{John Quensen}
 \date{December 30, 2016}
-% \VignetteIndexEntry{Example Workflows with USEARCH Output}
-
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 
