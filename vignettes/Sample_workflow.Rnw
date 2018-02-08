@@ -13,8 +13,12 @@
 \title{Example Workflows for the Package RDPutils}
 \author{John Quensen}
 \date{June 30, 2015}
-% \VignetteIndexEntry{Example Workflows for the Package RDPutils}
-
+# % \VignetteIndexEntry{Example Workflows for the Package RDPutils}
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 
