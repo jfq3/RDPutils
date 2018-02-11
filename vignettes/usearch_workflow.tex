@@ -23,8 +23,6 @@
 
 \section*{Introduction}
 
-Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The \texttt{UPARSE} pipeline implemented in \texttt{USEARCH} is an attractive alternative method because of its much greater speed and smaller memory requirements.  \texttt{RDPutils} version 1.3 adds several functions for importing\texttt{ USEARCH/UPARSE} output as \texttt{phyloseq} otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
-
 Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The \texttt{UPARSE} pipeline implemented in \texttt{USEARCH} is an attractive alternative method because of its much greater speed and smaller memory requirements.  \texttt{RDPutils} version 1.3 adds several functions for importing \texttt{USEARCH/UPARSE} output as \texttt{phyloseq} otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
 
 \texttt{USEARCH} is available as a free 32-bit version and a paid 64-bit version. The 32-bit version has a 4 Gb memory limit which prevents dereplicating and clustering data from larger experiments. Presently the latest 64-bit version available on MSU's HPCC is 8.1, so I have written the script below to be run with\texttt{ USEARCH 8.1} with one exception. For comparison, I have included classification using the \texttt{sintax} command new beginning with \texttt{USEARCH} version 9. The memory requirement for classification is small enough that the 32-bit version of the program can be used. 
@@ -98,11 +96,12 @@ The OTU table can be imported in several ways. The file containing only the OTU 
 
 \begin{Schunk}
 \begin{Sinput}
-> setwd("C:/R_My_Packages/RDPutils/vignettes")
 > suppressWarnings(suppressMessages(library(phyloseq)))
 > suppressWarnings(suppressMessages(library(RDPutils)))
 > suppressWarnings(suppressMessages(library(Biostrings)))
-> otu <- read.table(file = "otu_03_table_only.txt", header = TRUE, row.names = 1, 
+> otu.file <- system.file("extdata", "otu_03_table_only.txt",
++                         package="RDPutils")
+> otu <- read.table(file = otu.file, header = TRUE, row.names = 1, 
 +                   sep = '\t', comment.char = "")
 > head(otu)
 \end{Sinput}
@@ -130,7 +129,7 @@ The same file can also be read in with the \texttt{RDPutils} function \texttt{im
 
 \begin{Schunk}
 \begin{Sinput}
-> otu <- import_otutab_taxa(in_file = "otu_03_table_only.txt")
+> otu <- import_otutab_taxa(in_file = otu.file)
 > head(otu)
 \end{Sinput}
 \begin{Soutput}
@@ -161,7 +160,9 @@ The \texttt{biom} file containing only the OTU table can be read in with \texttt
 > parse_taxonomy_usearch <- function (char.vec){
 +   parse_taxonomy_default(strsplit(char.vec, ",", TRUE)[[1]])
 + }
-> otu <- import_biom(BIOMfilename = "otu_03_table_only.json", parseFunction = parse_taxonomy_usearch)
+> biom.file <- system.file("extdata", "otu_03_table_only.json",
++                         package="RDPutils")
+> otu <- import_biom(BIOMfilename = biom.file, parseFunction = parse_taxonomy_usearch)
 > head(otu)
 \end{Sinput}
 \begin{Soutput}
@@ -193,7 +194,8 @@ Import the taxonomy table made with the RDP classifier with the \texttt{make\_ta
 
 \begin{Schunk}
 \begin{Sinput}
-> rdp_tax <- make_tax_table(in_file = "rdp_classified_03.txt", confidence = 0.8)
+> rdp.class.file <- system.file("extdata", "rdp_classified_03.txt", package = "RDPutils")
+> rdp_tax <- make_tax_table(in_file = rdp.class.file, confidence = 0.8)
 > head(rdp_tax)
 \end{Sinput}
 \begin{Soutput}
@@ -254,7 +256,8 @@ Taxonomy tables created with \texttt{USEARCH}'s utax function are imported with 
 
 \begin{Schunk}
 \begin{Sinput}
-> u_tax <- import_utax_file(in_file = "utax_tax_table_03.txt", confidence = 0.8)
+> utax.table.file <- system.file("extdata", "utax_tax_table_03.txt", package = "RDPutils")
+> u_tax <- import_utax_file(in_file = utax.table.file, confidence = 0.8)
 > head(u_tax)
 \end{Sinput}
 \begin{Soutput}
@@ -290,7 +293,8 @@ Taxonomy tables created with \texttt{USEARCH}'s sintax function are imported wit
 
 \begin{Schunk}
 \begin{Sinput}
-> s_tax <- import_sintax_file(in_file = "sintax_tax_table.txt", confidence = 0.8)
+> sintax.table.file <- system.file("extdata", "sintax_tax_table.txt", package = "RDPutils")
+> s_tax <- import_sintax_file(in_file = sintax.table.file, confidence = 0.8)
 > head(s_tax)
 \end{Sinput}
 \begin{Soutput}
@@ -328,7 +332,8 @@ Import the tab-delimited \texttt{otutab\_taxa} file:
 
 \begin{Schunk}
 \begin{Sinput}
-> otu_tax <- import_otutab_taxa(in_file = "otu_03_tax_table.txt")
+> otu.tab.tax.file <- system.file("extdata", "otu_03_tax_table.txt", package = "RDPutils")
+> otu_tax <- import_otutab_taxa(in_file = otu.tab.tax.file)
 > otu_tax
 \end{Sinput}
 \begin{Soutput}
@@ -376,7 +381,8 @@ Import a \texttt{biom} file with both OTU and taxonomy tables.
 
 \begin{Schunk}
 \begin{Sinput}
-> biom_otu_tax <- import_biom("otu_03_tax_table.json", parseFunction = parse_taxonomy_usearch)
+> biom.otu.tax.file <- system.file("extdata", "otu_03_tax_table.json", package="RDPutils")
+> biom_otu_tax <- import_biom(biom.otu.tax.file, parseFunction = parse_taxonomy_usearch)
 > biom_otu_tax
 \end{Sinput}
 \end{Schunk}
@@ -389,7 +395,8 @@ An experiment-level \texttt{phyloseq} object is assembled from its component dat
 
 \begin{Schunk}
 \begin{Sinput}
-> my_seqs <- readDNAStringSet("otus_03.fa", format = "fasta")
+> seq.file <- system.file("extdata", "otus_03.fa", package = "RDPutils")
+> my_seqs <- readDNAStringSet(seq.file, format = "fasta")
 > my_seqs
 \end{Sinput}
 \begin{Soutput}
@@ -408,7 +415,8 @@ An experiment-level \texttt{phyloseq} object is assembled from its component dat
 [55]   335 CTCGTAGGCGGTTCAGCAAGTCG...GGAGTACGGCCGCAAGGCTAAA Otu55
 \end{Soutput}
 \begin{Sinput}
-> my_tree <- read_tree("usearch_03_tree.nwk", errorIfNULL = TRUE)
+> usearch.tree.file <- system.file("extdata", "usearch_03_tree.nwk", package = "RDPutils")
+> my_tree <- read_tree(usearch.tree.file, errorIfNULL = TRUE)
 > my_tree
 \end{Sinput}
 \begin{Soutput}
@@ -422,7 +430,8 @@ Node labels:
 Unrooted; includes branch lengths.
 \end{Soutput}
 \begin{Sinput}
-> sam.data <- read.table(file = "sam.data.txt", header = TRUE, row.names = 1, sep = "\t")
+> sam.data.file <- system.file("extdata", "sam.data.txt", package = "RDPutils")
+> sam.data <- read.table(file = sam.data.file, header = TRUE, row.names = 1, sep = "\t")
 > my_sam <- sample_data(sam.data, errorIfNULL = TRUE)
 > expt <- phyloseq(my_otu, my_sam, s_tax, my_tree, my_seqs)
 > expt
