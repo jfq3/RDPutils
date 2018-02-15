@@ -98,7 +98,7 @@ The commands below are run from a directory which contains aligned sample fasta 
 A helpful hint: The aligned sample fasta files should be named exactly as you wish your samples to be named. The names should not contain prefixes or suffixes such as `aligned_` or `_trimmed` commonly introduced by previous processing steps.
 
 ```
-!#/bin/bash
+#!/bin/bash
 
 # Complete-linkage clustering is performed by RDP's `mcClust` routine in the following three steps:
 
