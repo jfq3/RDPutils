@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="John Quensen" />
+
+<meta name="date" content="2018-02-12" />
+
+<title>Workflows for Command Line RDPTools Output</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Workflows for Command Line RDPTools Output</h1>
+<h4 class="author"><em>John Quensen</em></h4>
+<h4 class="date"><em>February 12, 2018</em></h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The purpose of this document is to demonstrate how output from the command-line version of RDPTools can be imported into <code>phyloseq</code>. Once this is done, the data can be analyzed not only using <code>phyloseq</code>’s wrapper functions, but by any method available in R.</p>
+</div>
+<div id="rdptools" class="section level1">
+<h1>RDPTools</h1>
+<p>The RDP (formerly the Ribosomal Database Project) at Michigan State University has long provided web-based tools for processing sequencing data. These tools were originally developed for handling pyrosequencing data for bacterial and archaeal 16S rRNA genes, but since then their capabilities have been expanded to include functional genes, 28S rRNA fungal sequences, and Illumina data. To handle the increased demands of analyzing larger data sets, command line versions of the tools have been made available as <code>RDPTools</code> on GitHub (<a href="https://github.com/rdpstaff/RDPTools" class="uri">https://github.com/rdpstaff/RDPTools</a>). With these tools sequencing data can be analyzed by either a “supervised” approach in which sequences are binned using the RDP classifier, or an “unsupervised” approach in which sequences are clustered according to their similarities. Tutorials are available on the RDP website (<a href="http://rdp.cme.msu.edu/tutorials/stats/RDPtutorial_statistics.html" class="uri">http://rdp.cme.msu.edu/tutorials/stats/RDPtutorial_statistics.html</a>) and detailed instructions for the command line tools are available on GitHub.</p>
+</div>
+<div id="phyloseq" class="section level1">
+<h1>Phyloseq</h1>
+<p><code>Phyloseq</code> is an R/Bioconductor package that provides a means of organizing all data related to a sequencing project and includes a growing number of convenience wrappers for exploratory data analysis. It also makes it easy to subset and merge both samples and taxa.</p>
+<p>You must install Bioconductor before installing <code>phyloseq</code>. If you have not already done so, install Bioconductor in R with the following commands:</p>
+<pre><code>source(&quot;http://bioconductor.org/biocLite.R&quot;)
+biocLite()</code></pre>
+<p>After installing Bioconductor, install <code>phyloseq</code> with the command:</p>
+<pre><code>biocLite(&quot;phyloseq&quot;)</code></pre>
+</div>
+<div id="importing-classifier-output-supervised-method" class="section level1">
+<h1>Importing Classifier Output (Supervised Method)</h1>
+<p>The RDP classifier is provided with training sets for the classification of bacterial and archael 16S rRNA and fungal 28S rRNA and ITS gene sequences, and can classify multiple samples at one time. An example command is:</p>
+<pre><code>java -Xmx2g -jar &lt;path_to&gt;/RDPTools/classifier.jar classify -g fungallsu
+  -c 0.5 -f fixrank -h test_hier.txt c:/RDP_examples/*.fasta</code></pre>
+<p>In this example, fungal 28S rRNA gene sequences in directory c:/RDP_examples/ are classified with confidence 0.5. The format is fixrank, meaning that only the ranks Domain, Phylum, Class, Order, Family, and Genus will be included in the classification. There will not be any sub-classes, etc., nor any missing ranks. Results are written to the file test_hier.txt in “hierachical” format. These results are imported into <code>phyloseq</code> with the <code>RDPutils</code> function <code>hier2phylseq</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">&quot;RDPutils&quot;</span>))
+hier.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;test_hier.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+class.expt &lt;-<span class="st"> </span><span class="kw">hier2phyloseq</span>(hier.file)
+class.expt</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 616 taxa and 9 samples ]
+## tax_table()   Taxonomy Table:    [ 616 taxa by 7 taxonomic ranks ]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rank_names</span>(class.expt)</code></pre></div>
+<pre><code>## [1] &quot;Rootrank&quot; &quot;Domain&quot;   &quot;Phylum&quot;   &quot;Class&quot;    &quot;Order&quot;    &quot;Family&quot;  
+## [7] &quot;Genus&quot;</code></pre>
+<p>The result is a <code>phyloseq</code> object with otu and taxonomy tables. A sample data table may be added separately:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample.data.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;WI_ext_sam.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+sam &lt;-<span class="st"> </span><span class="kw">read.table</span>(sample.data.file, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
+<span class="kw">sample_data</span>(class.expt) &lt;-<span class="st"> </span><span class="kw">sample_data</span>(sam, <span class="dt">errorIfNULL =</span> <span class="ot">TRUE</span>)
+class.expt</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 616 taxa and 9 samples ]
+## sample_data() Sample Data:       [ 9 samples by 22 sample variables ]
+## tax_table()   Taxonomy Table:    [ 616 taxa by 7 taxonomic ranks ]</code></pre>
+<p>The classifier includes non-fungal LSU sequences to improve classification. The next step is to remove all of the non-fungal OTUs.</p>
+<p>First, get the rank names.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rank_names</span>(class.expt)</code></pre></div>
+<pre><code>## [1] &quot;Rootrank&quot; &quot;Domain&quot;   &quot;Phylum&quot;   &quot;Class&quot;    &quot;Order&quot;    &quot;Family&quot;  
+## [7] &quot;Genus&quot;</code></pre>
+<p>Get unique domain names.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_taxa_unique</span>(class.expt, <span class="dt">taxonomic.rank=</span><span class="st">&quot;Domain&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;Fungi&quot;                    &quot;Animalia&quot;                
+## [3] &quot;Eukaryota incertae sedis&quot; &quot;Viridiplantae&quot;           
+## [5] &quot;Alveolata&quot;                &quot;unclass_Root&quot;            
+## [7] &quot;Amoebozoa&quot;</code></pre>
+<p>Subset to include only the Fungi.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fungi &lt;-<span class="st"> </span><span class="kw">subset_taxa</span>(class.expt, Domain<span class="op">==</span><span class="st">&quot;Fungi&quot;</span>)
+fungi</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 589 taxa and 9 samples ]
+## sample_data() Sample Data:       [ 9 samples by 22 sample variables ]
+## tax_table()   Taxonomy Table:    [ 589 taxa by 7 taxonomic ranks ]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_taxa_unique</span>(fungi, <span class="dt">taxonomic.rank=</span><span class="st">&quot;Domain&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;Fungi&quot;</code></pre>
+<p><code>fungi</code> can now be used for data analysis. It is based on fungal sequences only and contains counts for otus by sample, classification of those otus, and sample data such as treatment factors and environmental variables.</p>
+</div>
+<div id="importing-cluster-results-unsupervised-method" class="section level1">
+<h1>Importing Cluster Results (Unsupervised Method)</h1>
+<p>The unsupervised method is applicable to sequences that can be aligned, e.g. 16S rRNA gene sequences. The aligned sequences are clustered at specified distances to produce a “clust” file. Further processing results in an OTU table, representative sequences for each OTU, and a corresponding classification table. It is also possible with RDPTools to combine the OTU table, classification table, and a sample data table into a biom file. A tree file may also be generated from the representative sequences.</p>
+<p>The commands below are run from a directory which contains aligned sample fasta files inside the sub-directory <code>alignment</code>. The alignment can be created using RDP Aligners (Infernal bacterial and archaeal 16S Aligner, RDP fungal 28S Aligner, or Hmmer Aligner). Modify the path to ‘Clustering.jar’ as appropriate. Each command must be entered as a single line. In this document, long commands are carried over to the next line(s) and indented for readability.</p>
+<p>A helpful hint: The aligned sample fasta files should be named exactly as you wish your samples to be named. The names should not contain prefixes or suffixes such as <code>aligned_</code> or <code>_trimmed</code> commonly introduced by previous processing steps.</p>
+<pre><code>!#/bin/bash
+
+# Complete-linkage clustering is performed by RDP's `mcClust` routine in the following three steps:
+
+# Dereplicate:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar derep -m '#=GC_RF' -o derep.fa 
+  all_seqs.ids all_seqs.samples alignment/*.fasta
+
+# Calculate distance matrix:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar dmatrix --id-mapping 
+  all_seqs.ids --in derep.fa --outfile derep_matrix.bin   -l 200 
+  --dist-cutoff 0.1
+
+# Cluster:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar cluster --dist-file 
+  derep_matrix.bin --id-mapping all_seqs.ids --sample-mapping 
+  all_seqs.samples --method complete --outfile all_seq_complete.clust
+
+# Merge the aligned fasta files:
+java -jar ~/RDPTools/AlignmentTools/dist/AlignmentTools.jar alignment   
+  -merger alignment merged_aligned.fasta
+
+# Get representative sequences renamed to match OTU names (the -c option renames them):
+java -Xmx2g -jar ~/RDPTools/Clustering.jar rep-seqs -c --id-mapping 
+  all_seqs.ids --one-rep-per-otu   all_seq_complete.clust 0.03 
+  merged_aligned.fasta
+
+# Make a biom file containing only OTUs from the cluster file for distance 0.03:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar cluster-to-biom 
+  all_seq_complete.clust 0.03 &gt; all_seq_complete.clust.biom
+
+# Add classification and sample data to the biom file. 
+java -Xmx2g -jar ~/RDPTools/classifier.jar classify -c 0.5 -f biom -m 
+  all_seq_complete.clust.biom -d sam.data.txt -o  all_seq_complete.clust_classified.biom 
+  all_seq_complete.clust_rep_seqs.fasta
+
+# Unalign sequences and remove descriptions:  
+java -Xmx2g -jar ~/RDPTools/classifier.jar to-unaligned-fasta all_seq_complete.clust_rep_seqs.fasta | cut -f1 -d ' ' &gt; unaligned_short_names.fasta
+
+# Extract comparable (model) positions for tree building: 
+java -Xmx2g -jar ~/RDPTools/Clustering.jar derep -f -o all_seq_complete.clust_rep_seqs_modelonly.fasta rep_seqs.ids rep_seqs.sample all_seq_complete.clust_rep_seqs.fasta
+
+# Build the tree:
+fasttree -nt -gtr &lt; all_seq_complete.clust_rep_seqs.fasta &gt; my_expt_tree.nwk</code></pre>
+</div>
+<div id="processing-cluster-output" class="section level1">
+<h1>Processing Cluster Output</h1>
+<p>Phyloseq includes a function for importing the biom, tree, and representative sequence files directly.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(phyloseq)))
+
+biom.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;all_seq_complete.clust_classified.biom&quot;</span>,
+                        <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+
+tree.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;my_expt_tree.nwk&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+ref.seqs &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;unaligned_short_names.fasta&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+clst.expt &lt;-<span class="st"> </span><span class="kw">import_biom</span>(biom.file, 
+  <span class="dt">treefilename=</span>tree.file,
+  <span class="dt">refseqfilename=</span>ref.seqs,
+  <span class="dt">parseFunction=</span>parse_taxonomy_qiime)
+
+clst.expt</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 3280 taxa and 8 samples ]
+## sample_data() Sample Data:       [ 8 samples by 4 sample variables ]
+## tax_table()   Taxonomy Table:    [ 3280 taxa by 6 taxonomic ranks ]
+## phy_tree()    Phylogenetic Tree: [ 3280 tips and 3278 internal nodes ]
+## refseq()      DNAStringSet:      [ 3280 reference sequences ]</code></pre>
+<p>If one is not able to use the command line RDPTools, the <code>RDPutils</code> package for R includes a vignette for creating a <code>phyloseq</code> object from a cluster file and a set of corresponding representative sequences.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
