@@ -1,0 +1,230 @@
+---
+title: "RDPutils Workflows for USEARCH Output"
+author: "John Quensen"
+date: "February 11, 2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RDPutils Workflows for USEARCH Output}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The `UPARSE` pipeline implemented in `USEARCH` is an attractive alternative method because of its much greater speed and smaller memory requirements.  `RDPutils` version 1.3 adds several functions for importing `USEARCH/UPARSE` output as `phyloseq` otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
+
+`USEARCH` is available as a free 32-bit version and a paid 64-bit version. The 32-bit version has a 4 Gb memory limit which prevents dereplicating and clustering data from larger experiments. Presently the latest 64-bit version available on MSU's HPCC is 8.1, so I have written the script below to be run with` USEARCH 8.1` with one exception. For comparison, I have included classification using the `sintax` command new beginning with `USEARCH` version 9. The memory requirement for classification is small enough that the 32-bit version of the program can be used. 
+Beginning with merged and trimmed sequences from all samples catenated together into 
+`all_samples.fasta`, an example script for processing 16S data on MSU's HPCC is:  
+
+```
+
+#!/bin/bash
+
+# Set paths.
+usearch81=/mnt/research/rdp/public/thirdParty/usearch8.1.1831_i86linux64
+usearch91=/mnt/home/quensenj/usearch9/usearch9.1.13_i86linux32
+infernal_dir=/mnt/research/rdp/public/thirdParty/infernal-1.1/src
+cm_model_dir=/mnt/research/rdp/public/fungene_pipeline/resources/RRNA_16S_BACTERIA
+utax_rdp_16s=~/resources/utax_16s_ref.udb
+sintax_rdp_16s=~/resources/sintax_rdp_16s.udb
+
+# Load modules.
+module load FastTree
+
+# Dereplicate.
+$usearch81 -derep_fulllength all_samples.fasta -sizeout -fastaout uniques.fa \
+  -relabel Uniq
+
+# Cluster the dereplicated sequences - otus_03.fa are the representative sequences.
+$usearch81 -cluster_otus uniques.fa -minsize 2 -otus otus_03.fa -relabel Otu \
+  -otu_radius_pct 3.0
+
+# Make the otu table.
+$usearch81 -usearch_global all_samples.fasta -db otus_03.fa -strand plus -id 0.97 \
+  -otutabout otu_03_table_only.txt -biomout otu_03_table_only.json
+
+# Make the taxonomy table.
+$usearch81 -utax otus_03.fa -db $utax_rdp_16s -strand both \
+  -utaxout utax_tax_table_03.txt  -utax_cutoff 0.8
+
+# With USEARCH 8.1 it is possible to output the OTU table in biom format,
+# and it is also possible to includes taxonomy with the otu table and biom file
+# if taxonomy is first added to the representative sequences. 
+# Add taxonomy to the representative sequences.
+$usearch81 -utax otus_03.fa -db  $utax_rdp_16s -strand both -fastaout otus_tax_03.fa \
+  -utax_cutoff 0.8
+
+# Make otu table with taxonomy and biom file with otu and taxonomy tables.
+$usearch81 -usearch_global all_samples.fasta -db otus_tax_03.fa -strand plus -id 0.97 \
+ -otutabout otu_03_tax_table.txt -biomout otu_03_tax_table.json
+
+# With USEARCH 9.0 and later, taxonomy can also be assigned with the sintax function.
+$usearch91 -sintax otus_03.fa -db $sintax_rdp_16s -strand both \
+  -tabbedout sintax_tax_table.txt -sintax_cutoff 0.8
+
+# Assign taxonomy with the RDP Classifier.
+java -Xmx2g -jar $RDPTools_dir/classifier.jar classify -g 16srrna \
+  -c 0.8 -f fixrank -o rdp_classified_03.txt otus_03.fa
+
+# Align the representative sequences. AFA is aligned fasta format.
+$infernal_dir/cmalign -g --noprob --outformat AFA --dnaout -o aligned_otus_03.fasta \
+  $cm_model_dir/model.cm otus_03.fa
+
+# Tree the aligned representatve sequences.
+FastTree -nt -gtr < aligned_otus_03.fasta > usearch_03_tree.nwk
+
+```
+
+# Importing OTU Tables
+
+The OTU table can be imported in several ways. The file containing only the OTU table can be read in with the base `read.table` function, but the argument `comment.char = ""` must be included in order to ignore the leading `#` in the first line. It can then be converted to a `phyloseq otu_table` with `phyloseq`'s `otu_table` function.  
+
+```{r}
+suppressWarnings(suppressMessages(library(phyloseq)))
+suppressWarnings(suppressMessages(library(RDPutils)))
+suppressWarnings(suppressMessages(library(Biostrings)))
+otu.file <- system.file("extdata", "otu_03_table_only.txt",
+                        package="RDPutils")
+otu <- read.table(file = otu.file, header = TRUE, row.names = 1, 
+                  sep = '\t', comment.char = "")
+head(otu)
+my_otu <- otu_table(otu, taxa_are_rows = TRUE, errorIfNULL = TRUE)
+class(my_otu)
+```
+
+The same file can also be read in with the `RDPutils` function `import_otutab_taxa` function.  
+
+```{r}
+otu <- import_otutab_taxa(in_file = otu.file)
+head(otu)
+class(otu)
+```
+
+The `biom` file containing only the OTU table can be read in with `phyloseq`'s `import_biom` function provided a modified `parseFunction` is given. The `USEARCH` taxonomy files should be broken on commas.    
+
+```{r}
+parse_taxonomy_usearch <- function (char.vec){
+  parse_taxonomy_default(strsplit(char.vec, ",", TRUE)[[1]])
+}
+
+
+biom.file <- system.file("extdata", "otu_03_table_only.json",
+                        package="RDPutils")
+
+otu <- import_biom(BIOMfilename = biom.file, parseFunction = parse_taxonomy_usearch)
+head(otu)
+class(otu)
+```
+
+#Importing Taxonomy Tables
+
+## RDP Classifier
+
+Import the taxonomy table made with the RDP classifier with the `make_tax_table` function. It returns a `phyloseq tax_table object`. The confidence level is chosen on import. It is 0.5 by default.    
+
+```{r}
+rdp.class.file <- system.file("extdata", "rdp_classified_03.txt", package = "RDPutils")
+
+rdp_tax <- make_tax_table(in_file = rdp.class.file, confidence = 0.8)
+head(rdp_tax)
+rank_names(rdp_tax)
+taxa_names(rdp_tax)
+class(rdp_tax)
+```
+
+## UTAX
+
+Taxonomy tables created with `USEARCH`'s utax function are imported with `import_utax_file`. The confidence level is chosen on import. It is 0.8 by default.  
+
+```{r}
+utax.table.file <- system.file("extdata", "utax_tax_table_03.txt", package = "RDPutils")
+
+u_tax <- import_utax_file(in_file = utax.table.file, confidence = 0.8)
+head(u_tax)
+class(u_tax)
+```
+
+## SINTAX
+
+Taxonomy tables created with `USEARCH`'s sintax function are imported with `import_sintax_file`. The confidence level is chosen on import. It is 0.8 by default.  
+
+```{r}
+sintax.table.file <- system.file("extdata", "sintax_tax_table.txt", package = "RDPutils")
+
+s_tax <- import_sintax_file(in_file = sintax.table.file, confidence = 0.8)
+head(s_tax)
+class(s_tax)
+```
+
+## Importing Combined OTU & Taxonomy Tables
+
+`USEARCH` offers options to produce files with combined OTU and taxonomy information in a tab-delimited text file and as a `biom` file, and `RDPutils` includes functions for importing these files as `phyloseq` objects with both OTU table and taxonomy tables. Confidences, however, cannot be chosen on import. That is, they cannot be altered from how they were created with the `USEARCH` command.  
+
+Import the tab-delimited `otutab_taxa` file:  
+
+```{r}
+otu.tab.tax.file <- system.file("extdata", "otu_03_tax_table.txt", package = "RDPutils")
+
+otu_tax <- import_otutab_taxa(in_file = otu.tab.tax.file)
+otu_tax
+head(otu_table(otu_tax))
+head(tax_table(otu_tax))
+```
+
+Import a `biom` file with both OTU and taxonomy tables.  
+
+```{r, eval=FALSE}
+biom.otu.tax.file <- system.file("extdata", "otu_03_tax_table.json", package="RDPutils")
+
+biom_otu_tax <- import_biom(biom.otu.tax.file, parseFunction = parse_taxonomy_usearch)
+biom_otu_tax
+```
+
+## Including Sample Data, Reference Sequences, & Trees  
+
+For `USEARCH` processed data, reference sequences can always be included in an experiment level phyloseq object, as can sample data. Sample data text files are best created in a spreadsheet program and saved as a comma- or tab-delimited text file. The sample names in such a file must match exactly the sample names in the OTU table. Such a sample data file is read into `R` with the base `read.csv` or `read.table` functions and then converted to `phyloseq`'s `sample_data function`. If the gene of interest can be aligned and treed, as is the case with this 16S example, then the tree can also be included in the experiment level phyloseq object. This is not possible with ITS2 data because the sequences cannot be aligned.   
+
+An experiment-level `phyloseq` object is assembled from its component data with the `phyloseq` constructor, as below:  
+
+```{r}
+seq.file <- system.file("extdata", "otus_03.fa", package = "RDPutils")
+
+my_seqs <- readDNAStringSet(seq.file, format = "fasta")
+my_seqs
+
+usearch.tree.file <- system.file("extdata", "usearch_03_tree.nwk", package = "RDPutils")
+my_tree <- read_tree(usearch.tree.file, errorIfNULL = TRUE)
+my_tree
+
+sam.data.file <- system.file("extdata", "sam_data.txt", package = "RDPutils")
+sam.data <- read.table(file = sam.data.file, header = TRUE, row.names = 1, sep = "\t")
+my_sam <- sample_data(sam.data, errorIfNULL = TRUE)
+
+expt <- phyloseq(my_otu, my_sam, s_tax, my_tree, my_seqs)
+expt
+```
+
+##  Substituting Taxonomy Tables
+
+If as in the script above you have created several taxonomy tables, you may substitute one for another in the experiment level `phyloseq` object. If you do this after the taxa have been subset in some way, the substituting taxonomy table is automatically subset on substitution. To demonstrate, subset `expt` to include only the 20 more abundant OTUs and then substitute the present tax table created with `sintax` with the one created with the RDP classifier:  
+
+```{r}
+keep <- names(sort(taxa_sums(expt), decreasing = TRUE)[1:20])
+expt.top.20 <- prune_taxa(keep, expt)
+tax_table(expt.top.20) <- rdp_tax
+expt.top.20
+```
+
+It is obvious that the taxa have been subset. `expt` contains 55 taxa, while `expt.top.20` contains only 20. To confirm that the taxonomy tables have been substituted, examine the first few rows in `expt` and `expt.top.20` taxonomy tables:  
+
+```{r}
+head(tax_table(expt))
+head(tax_table(expt.top.20))
+```
+
+

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="John Quensen" />
+
+<meta name="date" content="2018-02-11" />
+
+<title>RDPutils Workflows for USEARCH Output</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">RDPutils Workflows for USEARCH Output</h1>
+<h4 class="author"><em>John Quensen</em></h4>
+<h4 class="date"><em>February 11, 2018</em></h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Illumina’s MiSeq sequencing platform is capable of generating much larger data sets than Roche’s older 454 pyrosequencing method. Processing these large data sets using RDPTools’ complete linkage clustering method is impractical because of the large computer memory and long run times required. The <code>UPARSE</code> pipeline implemented in <code>USEARCH</code> is an attractive alternative method because of its much greater speed and smaller memory requirements. <code>RDPutils</code> version 1.3 adds several functions for importing <code>USEARCH/UPARSE</code> output as <code>phyloseq</code> otu and taxonomy tables. The otu sequences may also be imported as reference sequences.</p>
+<p><code>USEARCH</code> is available as a free 32-bit version and a paid 64-bit version. The 32-bit version has a 4 Gb memory limit which prevents dereplicating and clustering data from larger experiments. Presently the latest 64-bit version available on MSU’s HPCC is 8.1, so I have written the script below to be run with<code>USEARCH 8.1</code> with one exception. For comparison, I have included classification using the <code>sintax</code> command new beginning with <code>USEARCH</code> version 9. The memory requirement for classification is small enough that the 32-bit version of the program can be used. Beginning with merged and trimmed sequences from all samples catenated together into <code>all_samples.fasta</code>, an example script for processing 16S data on MSU’s HPCC is:</p>
+<pre><code>
+#!/bin/bash
+
+# Set paths.
+usearch81=/mnt/research/rdp/public/thirdParty/usearch8.1.1831_i86linux64
+usearch91=/mnt/home/quensenj/usearch9/usearch9.1.13_i86linux32
+infernal_dir=/mnt/research/rdp/public/thirdParty/infernal-1.1/src
+cm_model_dir=/mnt/research/rdp/public/fungene_pipeline/resources/RRNA_16S_BACTERIA
+utax_rdp_16s=~/resources/utax_16s_ref.udb
+sintax_rdp_16s=~/resources/sintax_rdp_16s.udb
+
+# Load modules.
+module load FastTree
+
+# Dereplicate.
+$usearch81 -derep_fulllength all_samples.fasta -sizeout -fastaout uniques.fa \
+  -relabel Uniq
+
+# Cluster the dereplicated sequences - otus_03.fa are the representative sequences.
+$usearch81 -cluster_otus uniques.fa -minsize 2 -otus otus_03.fa -relabel Otu \
+  -otu_radius_pct 3.0
+
+# Make the otu table.
+$usearch81 -usearch_global all_samples.fasta -db otus_03.fa -strand plus -id 0.97 \
+  -otutabout otu_03_table_only.txt -biomout otu_03_table_only.json
+
+# Make the taxonomy table.
+$usearch81 -utax otus_03.fa -db $utax_rdp_16s -strand both \
+  -utaxout utax_tax_table_03.txt  -utax_cutoff 0.8
+
+# With USEARCH 8.1 it is possible to output the OTU table in biom format,
+# and it is also possible to includes taxonomy with the otu table and biom file
+# if taxonomy is first added to the representative sequences. 
+# Add taxonomy to the representative sequences.
+$usearch81 -utax otus_03.fa -db  $utax_rdp_16s -strand both -fastaout otus_tax_03.fa \
+  -utax_cutoff 0.8
+
+# Make otu table with taxonomy and biom file with otu and taxonomy tables.
+$usearch81 -usearch_global all_samples.fasta -db otus_tax_03.fa -strand plus -id 0.97 \
+ -otutabout otu_03_tax_table.txt -biomout otu_03_tax_table.json
+
+# With USEARCH 9.0 and later, taxonomy can also be assigned with the sintax function.
+$usearch91 -sintax otus_03.fa -db $sintax_rdp_16s -strand both \
+  -tabbedout sintax_tax_table.txt -sintax_cutoff 0.8
+
+# Assign taxonomy with the RDP Classifier.
+java -Xmx2g -jar $RDPTools_dir/classifier.jar classify -g 16srrna \
+  -c 0.8 -f fixrank -o rdp_classified_03.txt otus_03.fa
+
+# Align the representative sequences. AFA is aligned fasta format.
+$infernal_dir/cmalign -g --noprob --outformat AFA --dnaout -o aligned_otus_03.fasta \
+  $cm_model_dir/model.cm otus_03.fa
+
+# Tree the aligned representatve sequences.
+FastTree -nt -gtr &lt; aligned_otus_03.fasta &gt; usearch_03_tree.nwk
+</code></pre>
+</div>
+<div id="importing-otu-tables" class="section level1">
+<h1>Importing OTU Tables</h1>
+<p>The OTU table can be imported in several ways. The file containing only the OTU table can be read in with the base <code>read.table</code> function, but the argument <code>comment.char = &quot;&quot;</code> must be included in order to ignore the leading <code>#</code> in the first line. It can then be converted to a <code>phyloseq otu_table</code> with <code>phyloseq</code>’s <code>otu_table</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(phyloseq)))
+<span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(RDPutils)))
+<span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(Biostrings)))
+otu.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;otu_03_table_only.txt&quot;</span>,
+                        <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+otu &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> otu.file, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">row.names =</span> <span class="dv">1</span>, 
+                  <span class="dt">sep =</span> <span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">comment.char =</span> <span class="st">&quot;&quot;</span>)
+<span class="kw">head</span>(otu)</code></pre></div>
+<pre><code>##       Sample_1 Sample_2 Sample_3 Sample_4
+## Otu39        1        2        1        0
+## Otu2         6        7       11       12
+## Otu11        1        3        2        1
+## Otu4         9        5        3        3
+## Otu1        13       12        2       10
+## Otu5        10        3       16       12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_otu &lt;-<span class="st"> </span><span class="kw">otu_table</span>(otu, <span class="dt">taxa_are_rows =</span> <span class="ot">TRUE</span>, <span class="dt">errorIfNULL =</span> <span class="ot">TRUE</span>)
+<span class="kw">class</span>(my_otu)</code></pre></div>
+<pre><code>## [1] &quot;otu_table&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;phyloseq&quot;</code></pre>
+<p>The same file can also be read in with the <code>RDPutils</code> function <code>import_otutab_taxa</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">otu &lt;-<span class="st"> </span><span class="kw">import_otutab_taxa</span>(<span class="dt">in_file =</span> otu.file)
+<span class="kw">head</span>(otu)</code></pre></div>
+<pre><code>## OTU Table:          [6 taxa and 4 samples]
+##                      taxa are rows
+##       Sample_1 Sample_2 Sample_3 Sample_4
+## Otu39        1        2        1        0
+## Otu2         6        7       11       12
+## Otu11        1        3        2        1
+## Otu4         9        5        3        3
+## Otu1        13       12        2       10
+## Otu5        10        3       16       12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(otu)</code></pre></div>
+<pre><code>## [1] &quot;otu_table&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;phyloseq&quot;</code></pre>
+<p>The <code>biom</code> file containing only the OTU table can be read in with <code>phyloseq</code>’s <code>import_biom</code> function provided a modified <code>parseFunction</code> is given. The <code>USEARCH</code> taxonomy files should be broken on commas.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">parse_taxonomy_usearch &lt;-<span class="st"> </span><span class="cf">function</span> (char.vec){
+  <span class="kw">parse_taxonomy_default</span>(<span class="kw">strsplit</span>(char.vec, <span class="st">&quot;,&quot;</span>, <span class="ot">TRUE</span>)[[<span class="dv">1</span>]])
+}
+
+
+biom.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;otu_03_table_only.json&quot;</span>,
+                        <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+
+otu &lt;-<span class="st"> </span><span class="kw">import_biom</span>(<span class="dt">BIOMfilename =</span> biom.file, <span class="dt">parseFunction =</span> parse_taxonomy_usearch)
+<span class="kw">head</span>(otu)</code></pre></div>
+<pre><code>## OTU Table:          [6 taxa and 4 samples]
+##                      taxa are rows
+##       Sample_1 Sample_2 Sample_3 Sample_4
+## Otu39        1        2        1        0
+## Otu2         6        7       11       12
+## Otu11        1        3        2        1
+## Otu4         9        5        3        3
+## Otu1        13       12        2       10
+## Otu5        10        3       16       12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(otu)</code></pre></div>
+<pre><code>## [1] &quot;otu_table&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;phyloseq&quot;</code></pre>
+</div>
+<div id="importing-taxonomy-tables" class="section level1">
+<h1>Importing Taxonomy Tables</h1>
+<div id="rdp-classifier" class="section level2">
+<h2>RDP Classifier</h2>
+<p>Import the taxonomy table made with the RDP classifier with the <code>make_tax_table</code> function. It returns a <code>phyloseq tax_table object</code>. The confidence level is chosen on import. It is 0.5 by default.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rdp.class.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;rdp_classified_03.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+rdp_tax &lt;-<span class="st"> </span><span class="kw">make_tax_table</span>(<span class="dt">in_file =</span> rdp.class.file, <span class="dt">confidence =</span> <span class="fl">0.8</span>)
+<span class="kw">head</span>(rdp_tax)</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##       Domain     Phylum                  Class                  
+## Otu1  &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Alphaproteobacteria&quot;  
+## Otu10 &quot;Bacteria&quot; &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;
+## Otu11 &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Alphaproteobacteria&quot;  
+## Otu12 &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Gammaproteobacteria&quot;  
+## Otu13 &quot;Bacteria&quot; &quot;Acidobacteria&quot;         &quot;Acidobacteria_Gp6&quot;    
+## Otu14 &quot;Bacteria&quot; &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;
+##       Order                   Family                    
+## Otu1  &quot;Rhizobiales&quot;           &quot;Bradyrhizobiaceae&quot;       
+## Otu10 &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;   
+## Otu11 &quot;Rhizobiales&quot;           &quot;unclassified_Rhizobiales&quot;
+## Otu12 &quot;Xanthomonadales&quot;       &quot;Sinobacteraceae&quot;         
+## Otu13 &quot;Gp6&quot;                   &quot;Gp6&quot;                     
+## Otu14 &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;   
+##       Genus                         
+## Otu1  &quot;Bradyrhizobium&quot;              
+## Otu10 &quot;unclassified_Bacteria&quot;       
+## Otu11 &quot;unclassified_Rhizobiales&quot;    
+## Otu12 &quot;unclassified_Sinobacteraceae&quot;
+## Otu13 &quot;Gp6&quot;                         
+## Otu14 &quot;unclassified_Bacteria&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rank_names</span>(rdp_tax)</code></pre></div>
+<pre><code>## [1] &quot;Domain&quot; &quot;Phylum&quot; &quot;Class&quot;  &quot;Order&quot;  &quot;Family&quot; &quot;Genus&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">taxa_names</span>(rdp_tax)</code></pre></div>
+<pre><code>##  [1] &quot;Otu1&quot;  &quot;Otu10&quot; &quot;Otu11&quot; &quot;Otu12&quot; &quot;Otu13&quot; &quot;Otu14&quot; &quot;Otu15&quot; &quot;Otu16&quot;
+##  [9] &quot;Otu17&quot; &quot;Otu18&quot; &quot;Otu19&quot; &quot;Otu2&quot;  &quot;Otu20&quot; &quot;Otu21&quot; &quot;Otu22&quot; &quot;Otu23&quot;
+## [17] &quot;Otu24&quot; &quot;Otu25&quot; &quot;Otu26&quot; &quot;Otu27&quot; &quot;Otu28&quot; &quot;Otu29&quot; &quot;Otu3&quot;  &quot;Otu30&quot;
+## [25] &quot;Otu31&quot; &quot;Otu32&quot; &quot;Otu33&quot; &quot;Otu34&quot; &quot;Otu35&quot; &quot;Otu36&quot; &quot;Otu37&quot; &quot;Otu38&quot;
+## [33] &quot;Otu39&quot; &quot;Otu4&quot;  &quot;Otu40&quot; &quot;Otu41&quot; &quot;Otu42&quot; &quot;Otu43&quot; &quot;Otu44&quot; &quot;Otu45&quot;
+## [41] &quot;Otu46&quot; &quot;Otu47&quot; &quot;Otu48&quot; &quot;Otu49&quot; &quot;Otu5&quot;  &quot;Otu50&quot; &quot;Otu51&quot; &quot;Otu52&quot;
+## [49] &quot;Otu53&quot; &quot;Otu54&quot; &quot;Otu55&quot; &quot;Otu6&quot;  &quot;Otu7&quot;  &quot;Otu8&quot;  &quot;Otu9&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(rdp_tax)</code></pre></div>
+<pre><code>## [1] &quot;taxonomyTable&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;phyloseq&quot;</code></pre>
+</div>
+<div id="utax" class="section level2">
+<h2>UTAX</h2>
+<p>Taxonomy tables created with <code>USEARCH</code>’s utax function are imported with <code>import_utax_file</code>. The confidence level is chosen on import. It is 0.8 by default.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">utax.table.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;utax_tax_table_03.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+u_tax &lt;-<span class="st"> </span><span class="kw">import_utax_file</span>(<span class="dt">in_file =</span> utax.table.file, <span class="dt">confidence =</span> <span class="fl">0.8</span>)
+<span class="kw">head</span>(u_tax)</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##      Domain       Phylum             Class                  
+## Otu1 &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu2 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;  &quot;uncl_d_Bacteria&quot;      
+## Otu3 &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu4 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;  &quot;uncl_d_Bacteria&quot;      
+## Otu5 &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot;  &quot;c_Acidobacteria_Gp6&quot;  
+## Otu6 &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot;  &quot;c_Acidobacteria_Gp6&quot;  
+##      Order             Family                Genus                     
+## Otu1 &quot;o_Rhizobiales&quot;   &quot;f_Bradyrhizobiaceae&quot; &quot;g_Bradyrhizobium&quot;        
+## Otu2 &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     &quot;uncl_d_Bacteria&quot;         
+## Otu3 &quot;o_Rhizobiales&quot;   &quot;f_Hyphomicrobiaceae&quot; &quot;uncl_f_Hyphomicrobiaceae&quot;
+## Otu4 &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     &quot;uncl_d_Bacteria&quot;         
+## Otu5 &quot;o_Gp6&quot;           &quot;uncl_o_Gp6&quot;          &quot;uncl_o_Gp6&quot;              
+## Otu6 &quot;o_Gp6&quot;           &quot;uncl_o_Gp6&quot;          &quot;uncl_o_Gp6&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(u_tax)</code></pre></div>
+<pre><code>## [1] &quot;taxonomyTable&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;phyloseq&quot;</code></pre>
+</div>
+<div id="sintax" class="section level2">
+<h2>SINTAX</h2>
+<p>Taxonomy tables created with <code>USEARCH</code>’s sintax function are imported with <code>import_sintax_file</code>. The confidence level is chosen on import. It is 0.8 by default.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sintax.table.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;sintax_tax_table.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+s_tax &lt;-<span class="st"> </span><span class="kw">import_sintax_file</span>(<span class="dt">in_file =</span> sintax.table.file, <span class="dt">confidence =</span> <span class="fl">0.8</span>)
+<span class="kw">head</span>(s_tax)</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##      Domain       Phylum             Class                  
+## Otu1 &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu2 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;  &quot;uncl_d_Bacteria&quot;      
+## Otu3 &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu4 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;  &quot;uncl_d_Bacteria&quot;      
+## Otu5 &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot;  &quot;c_Acidobacteria_Gp6&quot;  
+## Otu6 &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot;  &quot;c_Acidobacteria_Gp6&quot;  
+##      Order             Family                Genus                     
+## Otu1 &quot;o_Rhizobiales&quot;   &quot;f_Bradyrhizobiaceae&quot; &quot;g_Bradyrhizobium&quot;        
+## Otu2 &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     &quot;uncl_d_Bacteria&quot;         
+## Otu3 &quot;o_Rhizobiales&quot;   &quot;f_Hyphomicrobiaceae&quot; &quot;uncl_f_Hyphomicrobiaceae&quot;
+## Otu4 &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     &quot;uncl_d_Bacteria&quot;         
+## Otu5 &quot;g_Gp6&quot;           &quot;uncl_g_Gp6&quot;          &quot;uncl_g_Gp6&quot;              
+## Otu6 &quot;g_Gp6&quot;           &quot;uncl_g_Gp6&quot;          &quot;uncl_g_Gp6&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(s_tax)</code></pre></div>
+<pre><code>## [1] &quot;taxonomyTable&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;phyloseq&quot;</code></pre>
+</div>
+<div id="importing-combined-otu-taxonomy-tables" class="section level2">
+<h2>Importing Combined OTU &amp; Taxonomy Tables</h2>
+<p><code>USEARCH</code> offers options to produce files with combined OTU and taxonomy information in a tab-delimited text file and as a <code>biom</code> file, and <code>RDPutils</code> includes functions for importing these files as <code>phyloseq</code> objects with both OTU table and taxonomy tables. Confidences, however, cannot be chosen on import. That is, they cannot be altered from how they were created with the <code>USEARCH</code> command.</p>
+<p>Import the tab-delimited <code>otutab_taxa</code> file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">otu.tab.tax.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;otu_03_tax_table.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+otu_tax &lt;-<span class="st"> </span><span class="kw">import_otutab_taxa</span>(<span class="dt">in_file =</span> otu.tab.tax.file)
+otu_tax</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 55 taxa and 4 samples ]
+## tax_table()   Taxonomy Table:    [ 55 taxa by 6 taxonomic ranks ]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">otu_table</span>(otu_tax))</code></pre></div>
+<pre><code>## OTU Table:          [6 taxa and 4 samples]
+##                      taxa are rows
+##       Sample_1 Sample_2 Sample_3 Sample_4
+## Otu39        1        2        1        0
+## Otu2         6        7       11       12
+## Otu11        1        3        2        1
+## Otu4         9        5        3        3
+## Otu1        13       12        2       10
+## Otu5        10        3       16       12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">tax_table</span>(otu_tax))</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##       Domain       Phylum             Class                  
+## Otu39 &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu2  &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;  &quot;uncl_d_Bacteria&quot;      
+## Otu11 &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu4  &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;  &quot;uncl_d_Bacteria&quot;      
+## Otu1  &quot;d_Bacteria&quot; &quot;p_Proteobacteria&quot; &quot;c_Alphaproteobacteria&quot;
+## Otu5  &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot;  &quot;c_Acidobacteria_Gp6&quot;  
+##       Order             Family                Genus               
+## Otu39 &quot;o_Rhizobiales&quot;   &quot;uncl_o_Rhizobiales&quot;  &quot;uncl_o_Rhizobiales&quot;
+## Otu2  &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     &quot;uncl_d_Bacteria&quot;   
+## Otu11 &quot;o_Rhizobiales&quot;   &quot;uncl_o_Rhizobiales&quot;  &quot;uncl_o_Rhizobiales&quot;
+## Otu4  &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     &quot;uncl_d_Bacteria&quot;   
+## Otu1  &quot;o_Rhizobiales&quot;   &quot;f_Bradyrhizobiaceae&quot; &quot;g_Bradyrhizobium&quot;  
+## Otu5  &quot;o_Gp6&quot;           &quot;uncl_o_Gp6&quot;          &quot;uncl_o_Gp6&quot;</code></pre>
+<p>Import a <code>biom</code> file with both OTU and taxonomy tables.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biom.otu.tax.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;otu_03_tax_table.json&quot;</span>, <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+
+biom_otu_tax &lt;-<span class="st"> </span><span class="kw">import_biom</span>(biom.otu.tax.file, <span class="dt">parseFunction =</span> parse_taxonomy_usearch)
+biom_otu_tax</code></pre></div>
+</div>
+<div id="including-sample-data-reference-sequences-trees" class="section level2">
+<h2>Including Sample Data, Reference Sequences, &amp; Trees</h2>
+<p>For <code>USEARCH</code> processed data, reference sequences can always be included in an experiment level phyloseq object, as can sample data. Sample data text files are best created in a spreadsheet program and saved as a comma- or tab-delimited text file. The sample names in such a file must match exactly the sample names in the OTU table. Such a sample data file is read into <code>R</code> with the base <code>read.csv</code> or <code>read.table</code> functions and then converted to <code>phyloseq</code>’s <code>sample_data function</code>. If the gene of interest can be aligned and treed, as is the case with this 16S example, then the tree can also be included in the experiment level phyloseq object. This is not possible with ITS2 data because the sequences cannot be aligned.</p>
+<p>An experiment-level <code>phyloseq</code> object is assembled from its component data with the <code>phyloseq</code> constructor, as below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seq.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;otus_03.fa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+
+my_seqs &lt;-<span class="st"> </span><span class="kw">readDNAStringSet</span>(seq.file, <span class="dt">format =</span> <span class="st">&quot;fasta&quot;</span>)
+my_seqs</code></pre></div>
+<pre><code>##   A DNAStringSet instance of length 55
+##      width seq                                         names               
+##  [1]   330 TGCGTAGGCGGGTCTTTAAG...AGTACGGTCGCAAGATTAAA Otu1
+##  [2]   332 CGCGTAGGCGGGATGGTAAG...AGTACGGCCGCAAGGTTGAA Otu2
+##  [3]   330 CACGTAGGCGGATGTGCCAG...AGTACGGCCGCAAGGTTAAA Otu3
+##  [4]   332 CGCGTAGGCGGGATGGCAAG...AGTACGGCCGCAAGGTTGAA Otu4
+##  [5]   332 CTCGTAGGCGGCCAACTAAG...AGTACGGTCGCAAGGCTGAA Otu5
+##  ...   ... ...
+## [51]   330 AGTGTAGGTGGTTGTCCAAG...AGTACGGCCGCAAGGTTGAA Otu51
+## [52]   332 CGCGTAGGCGGCTTGACAAG...AGTACGGTCGCAAGGCTGAA Otu52
+## [53]   330 CGCGTAGGCGGCTTTGTAAG...AGTACGGTCGCAAGATTAAA Otu53
+## [54]   330 CGCGTAGGCGGCTTATCAAG...AGTACGGTCGCAAGATTAAA Otu54
+## [55]   335 CTCGTAGGCGGTTCAGCAAG...AGTACGGCCGCAAGGCTAAA Otu55</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usearch.tree.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;usearch_03_tree.nwk&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+my_tree &lt;-<span class="st"> </span><span class="kw">read_tree</span>(usearch.tree.file, <span class="dt">errorIfNULL =</span> <span class="ot">TRUE</span>)
+my_tree</code></pre></div>
+<pre><code>## 
+## Phylogenetic tree with 55 tips and 53 internal nodes.
+## 
+## Tip labels:
+##  Otu19, Otu14, Otu20, Otu10, Otu40, Otu21, ...
+## Node labels:
+##  , 0.892, 0.881, 0.780, 0.988, 0.921, ...
+## 
+## Unrooted; includes branch lengths.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sam.data.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;sam_data.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
+sam.data &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> sam.data.file, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">row.names =</span> <span class="dv">1</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
+my_sam &lt;-<span class="st"> </span><span class="kw">sample_data</span>(sam.data, <span class="dt">errorIfNULL =</span> <span class="ot">TRUE</span>)
+
+expt &lt;-<span class="st"> </span><span class="kw">phyloseq</span>(my_otu, my_sam, s_tax, my_tree, my_seqs)
+expt</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 55 taxa and 4 samples ]
+## sample_data() Sample Data:       [ 4 samples by 4 sample variables ]
+## tax_table()   Taxonomy Table:    [ 55 taxa by 6 taxonomic ranks ]
+## phy_tree()    Phylogenetic Tree: [ 55 tips and 53 internal nodes ]
+## refseq()      DNAStringSet:      [ 55 reference sequences ]</code></pre>
+</div>
+<div id="substituting-taxonomy-tables" class="section level2">
+<h2>Substituting Taxonomy Tables</h2>
+<p>If as in the script above you have created several taxonomy tables, you may substitute one for another in the experiment level <code>phyloseq</code> object. If you do this after the taxa have been subset in some way, the substituting taxonomy table is automatically subset on substitution. To demonstrate, subset <code>expt</code> to include only the 20 more abundant OTUs and then substitute the present tax table created with <code>sintax</code> with the one created with the RDP classifier:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">sort</span>(<span class="kw">taxa_sums</span>(expt), <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>])
+expt.top.<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">prune_taxa</span>(keep, expt)
+<span class="kw">tax_table</span>(expt.top.<span class="dv">20</span>) &lt;-<span class="st"> </span>rdp_tax
+expt.top.<span class="dv">20</span></code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 20 taxa and 4 samples ]
+## sample_data() Sample Data:       [ 4 samples by 4 sample variables ]
+## tax_table()   Taxonomy Table:    [ 20 taxa by 6 taxonomic ranks ]
+## phy_tree()    Phylogenetic Tree: [ 20 tips and 18 internal nodes ]
+## refseq()      DNAStringSet:      [ 20 reference sequences ]</code></pre>
+<p>It is obvious that the taxa have been subset. <code>expt</code> contains 55 taxa, while <code>expt.top.20</code> contains only 20. To confirm that the taxonomy tables have been substituted, examine the first few rows in <code>expt</code> and <code>expt.top.20</code> taxonomy tables:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">tax_table</span>(expt))</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##       Domain       Phylum            Class                 
+## Otu19 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     
+## Otu14 &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot; &quot;c_Acidobacteria_Gp16&quot;
+## Otu20 &quot;d_Bacteria&quot; &quot;p_Chloroflexi&quot;   &quot;c_Anaerolineae&quot;      
+## Otu10 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     
+## Otu40 &quot;d_Bacteria&quot; &quot;uncl_d_Bacteria&quot; &quot;uncl_d_Bacteria&quot;     
+## Otu21 &quot;d_Bacteria&quot; &quot;p_Acidobacteria&quot; &quot;c_Acidobacteria_Gp4&quot; 
+##       Order                       Family                     
+## Otu19 &quot;uncl_d_Bacteria&quot;           &quot;uncl_d_Bacteria&quot;          
+## Otu14 &quot;uncl_c_Acidobacteria_Gp16&quot; &quot;uncl_c_Acidobacteria_Gp16&quot;
+## Otu20 &quot;o_Anaerolineales&quot;          &quot;f_Anaerolineaceae&quot;        
+## Otu10 &quot;uncl_d_Bacteria&quot;           &quot;uncl_d_Bacteria&quot;          
+## Otu40 &quot;uncl_d_Bacteria&quot;           &quot;uncl_d_Bacteria&quot;          
+## Otu21 &quot;g_Gp4&quot;                     &quot;uncl_g_Gp4&quot;               
+##       Genus                   
+## Otu19 &quot;uncl_d_Bacteria&quot;       
+## Otu14 &quot;g_Gp16&quot;                
+## Otu20 &quot;uncl_f_Anaerolineaceae&quot;
+## Otu10 &quot;uncl_d_Bacteria&quot;       
+## Otu40 &quot;uncl_d_Bacteria&quot;       
+## Otu21 &quot;uncl_g_Gp4&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">tax_table</span>(expt.top.<span class="dv">20</span>))</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##       Domain     Phylum                  Class                  
+## Otu14 &quot;Bacteria&quot; &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;
+## Otu20 &quot;Bacteria&quot; &quot;Chloroflexi&quot;           &quot;Anaerolineae&quot;         
+## Otu21 &quot;Bacteria&quot; &quot;Acidobacteria&quot;         &quot;Acidobacteria_Gp4&quot;    
+## Otu43 &quot;Bacteria&quot; &quot;Acidobacteria&quot;         &quot;Acidobacteria_Gp4&quot;    
+## Otu5  &quot;Bacteria&quot; &quot;Acidobacteria&quot;         &quot;Acidobacteria_Gp6&quot;    
+## Otu6  &quot;Bacteria&quot; &quot;Acidobacteria&quot;         &quot;Acidobacteria_Gp6&quot;    
+##       Order                   Family                 
+## Otu14 &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;
+## Otu20 &quot;Anaerolineales&quot;        &quot;Anaerolineaceae&quot;      
+## Otu21 &quot;Gp4&quot;                   &quot;Gp4&quot;                  
+## Otu43 &quot;Gp4&quot;                   &quot;Gp4&quot;                  
+## Otu5  &quot;Gp6&quot;                   &quot;Gp6&quot;                  
+## Otu6  &quot;Gp6&quot;                   &quot;Gp6&quot;                  
+##       Genus                         
+## Otu14 &quot;unclassified_Bacteria&quot;       
+## Otu20 &quot;unclassified_Anaerolineaceae&quot;
+## Otu21 &quot;Gp4&quot;                         
+## Otu43 &quot;Gp4&quot;                         
+## Otu5  &quot;Gp6&quot;                         
+## Otu6  &quot;Gp6&quot;</code></pre>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

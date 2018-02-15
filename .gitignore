@@ -26,4 +26,7 @@ Icon
 .Spotlight-V100
 .Trashes
 .Rproj.user
+# Temporaty files
+*.tex
 .RData
+.Rhistory

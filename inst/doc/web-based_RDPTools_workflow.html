@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="John Quensen" />
+
+<meta name="date" content="2018-02-11" />
+
+<title>Workflows for Web-based RDPTools Output</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Workflows for Web-based RDPTools Output</h1>
+<h4 class="author"><em>John Quensen</em></h4>
+<h4 class="date"><em>February 11, 2018</em></h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This package provides means to construct <code>phyloseq</code> objects from the output of RDP’s tools for clustering and classifying DNA sequences from high-throughput amplicon sequencing projects. This document applies primarily to working with output from the web-based tools. For a workflow more specific to using output from the command-line version of RDPTools, see ***.</p>
+<p>The Ribosomal Database Project (RDP) provides both web-based and command line tools for processing rRNA gene sequences from Bacteria, Archae, and Fungi as well as functional genes. Web-based tools and tutorials for using them are available at <a href="http://rdp.cme.msu.edu/index.jsp" class="uri">http://rdp.cme.msu.edu/index.jsp</a>. The command line tools are available at <a href="https://github.com/rdpstaff/RDPTools" class="uri">https://github.com/rdpstaff/RDPTools</a>. Processing can take either of two approaches. In the “supervised” approach, sequences from multiple samples are binned by classifying them using a database for Bacteria or Archae or Fungi, or a user’s own database, and further processing is usually done in a spreadsheet program. In the “unsupervised” approach, sequences are clustered into OTUs based on their degree of similarity. RDP provides additional tools to parse the cluster files into OTU tables that can be imported into R, and to retrieve representative sequences for each cluster.</p>
+<p><code>phyloseq</code> is an R/Bioconductor package that includes a variety of wrappers for quick exploratory data analysis of sequencing data, but perhaps its most convenient feature is that it provides a means of rapid and flexible sub-setting of data from a large experiment. A <code>phyloseq</code> object has slots for an OTU table, a classification table, a sample data table, a tree of the sequences representing each OTU, and the representative sequences themselves. I recommend <code>phyloseq</code> because it organizes all data for an experiment and R because it provides a flexible means of analyzing that data.</p>
+<p>The functions in this package reformat RDP output so that it is possible to fill <code>phyloseq</code> slots. In the case of the supervised approach, the RDP classifier result is reformatted directly into a <code>phyloseq</code> object containing an OTU table and a classification table. For the unsupervised approach, the OTU table can be the result from the RDP R-formatter tool, or from a function in this package. The key to filling the classification table and tree slots is to rename the representative sequences to correspond to the OTU names; this package includes functions to do this. Once renamed, the representative sequences can be classified and treed, and the results used to fill <code>phyloseq</code> classification table and tree slots. For either approach, a sample data table is most easily constructed in a spreadsheet program.</p>
+<p>Below are example workflows for both supervised and unsupervised approaches.</p>
+<p><strong>Note:</strong></p>
+<p>Input to some of the functions in this package are text files read from disk, normally in practice from your R working directory. But for the examples to work, it is necessary to use the <code>system.file</code> command to get the path plus file name in the R installation. This is assigned to a variable, and that variable is used as a function argument in place of what a user would normally enter enclosed in parentheses. For example, while the following works as an example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clstr.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;all_seq_complete.clust&quot;</span>,
+                          <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+otu &lt;-<span class="st"> </span><span class="kw">clstr2otu</span>(<span class="dt">clstr_file=</span>clstr.file, <span class="dt">dist=</span><span class="fl">0.03</span>, <span class="dt">OutFile=</span><span class="ot">TRUE</span>,
+                 <span class="dt">file_name=</span> <span class="st">&quot;dist_03.clust&quot;</span>)</code></pre></div>
+<p>a user would normally type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">otu &lt;-<span class="st"> </span><span class="kw">clstr2otu</span>(<span class="dt">clstr_file =</span> <span class="st">&quot;all_seq_complete.clust&quot;</span>, <span class="dt">dist =</span> <span class="fl">0.03</span>,
+                 <span class="dt">OutFile =</span> <span class="ot">FALSE</span>, <span class="dt">file_name =</span> <span class="st">&quot;dist_03.clust&quot;</span>)</code></pre></div>
+</div>
+<div id="workflow-for-cluster-results" class="section level1">
+<h1>Workflow for Cluster Results</h1>
+<p>RDP’s unsupervised method involves aligning rRNA sequences using the structure-aware Infernal aligner, calculating distances between sequences, and then clustering them, by default, by the complete linkage method. The result is a large “clust” file giving the numbers and names of every sequence in every cluster for every sample for several distances, from 0 to 0.15 by default. The R-formatter tool parses the cluster file into tab-delimited OTU tables for each distance with samples as rows and OTUs as columns. These can be easily imported into R with the base function <code>read.table</code>.</p>
+<p>Cluster files may also be parsed into an OTU table for a specific distance with <code>clstr2otu</code>. This function also gives the option of excising the portion of the larger cluster file that corresponds to the same specific distance, as in this example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RDPutils)
+clstr.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;all_seq_complete.clust&quot;</span>, 
+                          <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+otu &lt;-<span class="st"> </span><span class="kw">clstr2otu</span>(<span class="dt">clstr_file=</span>clstr.file, <span class="dt">dist=</span><span class="fl">0.03</span>, 
+                 <span class="dt">OutFile=</span><span class="ot">TRUE</span>, <span class="dt">file_name=</span> <span class="st">&quot;dist_03.clust&quot;</span>)
+otu[ , <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>] </code></pre></div>
+<pre><code>##          OTU_000 OTU_001 OTU_002 OTU_003 OTU_004
+## Sample_1       1       3       1       3       1
+## Sample_2       1       3       4       1       0
+## Sample_3       1       4       2       1       1
+## Sample_4       0       5       1       1       2</code></pre>
+<p>Here, <code>clstr.file</code> is the name of the cluster file, retrieved from the examples provided for <code>RDPutils</code>. Again, normally, the user would enter the cluster file name <code>all_seq_complete.clust</code> within quotation marks in its place. Since OutFile is <code>TRUE</code>, a cluster file for the distance 0.03 is written to the file <code>dist_03.clust</code>. The result, <code>otu</code>, is of course the OTU table. The sample names have been simplified by removing common prefixes and suffixes introduced by the RDP pipeline.</p>
+<p>Compare this to importing the text file from the R-formatter:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rformatfile &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;rformat_dist_0.03.txt&quot;</span>, 
+                           <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+otu.rdp &lt;-<span class="st"> </span><span class="kw">read.table</span>(rformatfile, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">row.names=</span><span class="dv">1</span>, 
+                      <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
+otu.rdp[ , <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</code></pre></div>
+<pre><code>##          OTU_000 OTU_001 OTU_002 OTU_003 OTU_004
+## Sample_1       1       3       1       3       1
+## Sample_4       0       5       1       1       2
+## Sample_3       1       4       2       1       1
+## Sample_2       1       3       4       1       0</code></pre>
+<p>The result is the same, except for the order of the samples, which of course can be sorted:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">otu.rdp &lt;-<span class="st"> </span>otu.rdp[<span class="kw">sort</span>(<span class="kw">rownames</span>(otu.rdp)), ]
+otu.rdp[ , <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</code></pre></div>
+<pre><code>##          OTU_000 OTU_001 OTU_002 OTU_003 OTU_004
+## Sample_1       1       3       1       3       1
+## Sample_2       1       3       4       1       0
+## Sample_3       1       4       2       1       1
+## Sample_4       0       5       1       1       2</code></pre>
+<p>In order to assign taxonomy to the OTUs, it is necessary to rename the representative sequences with the OTU names. After mid-2013, the tools to retrieve representative sequences include the cluster (or OTU) number in the fasta IDs.</p>
+<p>If retrieved with the on-line tool, they have the form:</p>
+<p><code>&gt;HC9DO0P01BCTC4 cluster_id=1,size=2</code></p>
+<p>If retrieved with the command line tool in RDPTools, they have the form:</p>
+<p><code>&gt;HC9DO0P01BCTC4 prefered=false,cluster=0,clustsize=2</code></p>
+<p><code>&gt;FTJQVTM02FQW3E  prefered=false,cluster=1,clustsize=7,maxDist=0.02917,minSumSquare=0.00191</code></p>
+<p>In these cases, it is possible to make an association between the representative sequence IDs and the OTU names with the function <code>assoc_repseq_IDs_with_otus_by_fasta</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repseq.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, 
+               <span class="st">&quot;all_seq_complete.clust_rep_seqs.fasta&quot;</span>, 
+                <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+assoc.table &lt;-<span class="st"> </span><span class="kw">assoc_repseq_IDs_with_otus_by_fasta</span>(<span class="dt">repseq_file =</span> 
+                                                     repseq.file)
+<span class="kw">head</span>(assoc.table)</code></pre></div>
+<pre><code>##        RepSeq.ID     OTU Cluster # Cluster size
+## 1 HC9DO0P01AW8TJ OTU_000         0            3
+## 2 HC9DO0P01AXCPC OTU_001         1           15
+## 3 HC9DO0P01AUPHY OTU_002         2            8
+## 4 HC9DO0P01A480B OTU_003         3            6
+## 5 HC9DO0P01AV8BT OTU_004         4            4
+## 6 HC9DO0P01A6EHN OTU_005         5            4</code></pre>
+<p>If the fasta IDs of the representative sequences do not meet the conditions above, the association between OTUs and representative sequences can be obtained from the cluster file. This method is more involved and takes longer to run. First it is necessary to get a list of the machine names of the representative sequences and use that list as input to the function <code>assoc_repseq_IDs_with_otus_by_clstr</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repseq.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, 
+                           <span class="st">&quot;all_seq_complete.clust_rep_seqs.fasta&quot;</span>, 
+                           <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+rep.seqs &lt;-<span class="st"> </span><span class="kw">get_repseq_IDs_from_fasta</span>(<span class="dt">repseq_file =</span> repseq.file)
+clstr &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;dist_03.clust&quot;</span>, <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+assoc.table &lt;-<span class="st"> </span><span class="kw">assoc_repseq_IDs_with_otus_by_clstr</span>(<span class="dt">clstr_file=</span>clstr, 
+                                                   <span class="dt">rep_seqs=</span>rep.seqs)
+<span class="kw">head</span>(assoc.table)</code></pre></div>
+<pre><code>##        RepSeq.ID     OTU Cluster #           Sample Sequences in Sample
+## 1 HC9DO0P01AW8TJ OTU_000         0 aligned_Sample_1                   1
+## 2 HC9DO0P01AXCPC OTU_001         1 aligned_Sample_2                   3
+## 3 HC9DO0P01AUPHY OTU_002         2 aligned_Sample_3                   2
+## 4 HC9DO0P01A480B OTU_003         3 aligned_Sample_1                   3
+## 5 HC9DO0P01AV8BT OTU_004         4 aligned_Sample_4                   2
+## 6 HC9DO0P01A6EHN OTU_005         5 aligned_Sample_1                   2</code></pre>
+<p>Once the <code>assoc.table</code> is made, it can be used to rename the representative sequences. But first, it is necessary to trim the IDs of the representative sequences to contain only the machine names.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repseq.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, 
+                           <span class="st">&quot;all_seq_complete.clust_rep_seqs.fasta&quot;</span>, 
+                           <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+<span class="kw">trim_fasta_names</span>(<span class="dt">repseq_file =</span> repseq.file, 
+                 <span class="dt">trimmed_names =</span> <span class="st">&quot;names_trimmed.fasta&quot;</span>, <span class="dt">strip =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>## [1] &quot;Fasta file with trimmed names written to file names_trimmed.fasta.&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rename_fasta</span>(<span class="dt">in_file =</span> <span class="st">&quot;names_trimmed.fasta&quot;</span>, <span class="dt">out_file =</span> <span class="st">&quot;renamed.fasta&quot;</span>, 
+             <span class="dt">rename_table =</span> assoc.table)</code></pre></div>
+<pre><code>## [1] &quot;Fasta sequences renamed with OTU names; written to file renamed.fasta.&quot;</code></pre>
+<p>After renaming, the representative sequences can be classified and the detailed fixrank format from the classifier converted into a <code>phyloseq</code> <code>tax_table</code> with the function <code>make_tax_table</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my.in.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fixrank_classified.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+my.tax.table &lt;-<span class="st"> </span><span class="kw">make_tax_table</span>(<span class="dt">in_file =</span> my.in.file, <span class="dt">confidence=</span><span class="fl">0.5</span>)
+<span class="kw">head</span>(my.tax.table)</code></pre></div>
+<pre><code>## Taxonomy Table:     [6 taxa by 6 taxonomic ranks]:
+##         Domain     Phylum                  Class                  
+## OTU_000 &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Alphaproteobacteria&quot;  
+## OTU_001 &quot;Bacteria&quot; &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;
+## OTU_002 &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Alphaproteobacteria&quot;  
+## OTU_003 &quot;Bacteria&quot; &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;
+## OTU_004 &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Alphaproteobacteria&quot;  
+## OTU_005 &quot;Bacteria&quot; &quot;Proteobacteria&quot;        &quot;Alphaproteobacteria&quot;  
+##         Order                   Family                    
+## OTU_000 &quot;Rhizobiales&quot;           &quot;unclassified_Rhizobiales&quot;
+## OTU_001 &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;   
+## OTU_002 &quot;Rhizobiales&quot;           &quot;unclassified_Rhizobiales&quot;
+## OTU_003 &quot;unclassified_Bacteria&quot; &quot;unclassified_Bacteria&quot;   
+## OTU_004 &quot;Rhizobiales&quot;           &quot;Hyphomicrobiaceae&quot;       
+## OTU_005 &quot;Rhizobiales&quot;           &quot;unclassified_Rhizobiales&quot;
+##         Genus                     
+## OTU_000 &quot;unclassified_Rhizobiales&quot;
+## OTU_001 &quot;unclassified_Bacteria&quot;   
+## OTU_002 &quot;unclassified_Rhizobiales&quot;
+## OTU_003 &quot;unclassified_Bacteria&quot;   
+## OTU_004 &quot;Rhodoplanes&quot;             
+## OTU_005 &quot;unclassified_Rhizobiales&quot;</code></pre>
+<p>The renamed representative sequences can also be treed, with FastTree for example, and the result included in a <code>phyloseq</code> object. Once this is done, a <code>phyloseq</code> object can be created. In the example below, sam.data is a simple dataframe including information about each sample, and <code>rep.tree.nwk</code> is a tree of the renamed representative sequences in Newick format. Nexus format is also acceptable. The <code>read_tree</code> function converts either to a phylo class object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(sam.data)
+sam.data</code></pre></div>
+<pre><code>##          Treatment Replicate Variable_A Variable_B
+## Sample_1         A         1       0.54       0.72
+## Sample_2         A         2       0.62       0.65
+## Sample_3         B         1       0.23       0.11
+## Sample_4         B         2       0.20       0.12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rep.tree &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;rep.tree.nwk&quot;</span>, <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+my.tree &lt;-<span class="st"> </span><span class="kw">read_tree</span>(rep.tree)
+my.otu &lt;-<span class="st"> </span><span class="kw">otu_table</span>(<span class="kw">as.matrix</span>(<span class="kw">t</span>(otu)), <span class="dt">taxa_are_rows=</span><span class="ot">TRUE</span>, <span class="dt">errorIfNULL=</span><span class="ot">TRUE</span>)
+my.data &lt;-<span class="st"> </span><span class="kw">sample_data</span>(sam.data)
+my.expt &lt;-<span class="st"> </span><span class="kw">phyloseq</span>(my.otu, my.tax.table, my.data, my.tree)
+my.expt</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 443 taxa and 4 samples ]
+## sample_data() Sample Data:       [ 4 samples by 4 sample variables ]
+## tax_table()   Taxonomy Table:    [ 443 taxa by 6 taxonomic ranks ]
+## phy_tree()    Phylogenetic Tree: [ 443 tips and 441 internal nodes ]</code></pre>
+</div>
+<div id="workflow-for-classifier-results" class="section level1">
+<h1>Workflow for Classifier Results</h1>
+<p>RDP’s web-based classifier for multiple samples is available at <a href="https://pyro.cme.msu.edu/classifier/form.spr" class="uri">https://pyro.cme.msu.edu/classifier/form.spr</a>, i.e. the version that is part of the RDP Pipeline (<a href="http://pyro.cme.msu.edu/" class="uri">http://pyro.cme.msu.edu/</a>). Databases are provided for bacterial and archaeal 16S rRNA, fungal 28S rRNA, and fungal ITS2 gene sequences. Results are downloaded as a compressed file containing several files including <code>hierachy.txt</code> and, in the case of 16S rRNA gene sequences, <code>cnadjusted_hierarchy.txt</code>. Counts in the latter are adjusted for 16S rRNA copy number. Either of these files can be imported into a <code>phyloseq</code> object containing an OTU table and taxonomy table with the function <code>hier2phyloseq</code>. This importer does not work with output from the web-based RDP classier available at <a href="http://rdp.cme.msu.edu/classifier/classifier.jsp" class="uri">http://rdp.cme.msu.edu/classifier/classifier.jsp</a>; that version is for classification of sequences in a single sample.</p>
+<p>As an example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hier.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;test_hier.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;RDPutils&quot;</span>)
+expt &lt;-<span class="st"> </span><span class="kw">hier2phyloseq</span>(<span class="dt">hier_file=</span>hier.file)
+expt</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 616 taxa and 9 samples ]
+## tax_table()   Taxonomy Table:    [ 616 taxa by 7 taxonomic ranks ]</code></pre>
+<p>This example is for 28S rRNA gene sequences and the aim is to analyze fungal communities. Domains other than fungi have been included in the data base to improve classification. The domains represented in the data can be determined thus:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rank_names</span>(expt)</code></pre></div>
+<pre><code>## [1] &quot;Rootrank&quot; &quot;Domain&quot;   &quot;Phylum&quot;   &quot;Class&quot;    &quot;Order&quot;    &quot;Family&quot;  
+## [7] &quot;Genus&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_taxa_unique</span>(expt, <span class="dt">taxonomic.rank =</span> <span class="st">&quot;Domain&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;Fungi&quot;                    &quot;Animalia&quot;                
+## [3] &quot;Eukaryota incertae sedis&quot; &quot;Viridiplantae&quot;           
+## [5] &quot;Alveolata&quot;                &quot;unclass_Root&quot;            
+## [7] &quot;Amoebozoa&quot;</code></pre>
+<p>The data can be subset to include only the fungal sequences thus:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fungi &lt;-<span class="st"> </span><span class="kw">subset_taxa</span>(expt, Domain<span class="op">==</span><span class="st">&quot;Fungi&quot;</span>)
+fungi</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 589 taxa and 9 samples ]
+## tax_table()   Taxonomy Table:    [ 589 taxa by 7 taxonomic ranks ]</code></pre>
+<p>and the percentage of non-fungal sequences is determined as:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">expt.sum &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">otu_table</span>(expt))
+fungi.sum &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">otu_table</span>(fungi))
+<span class="dv">100</span><span class="op">*</span>((expt.sum<span class="op">-</span>fungi.sum)<span class="op">/</span>expt.sum)</code></pre></div>
+<pre><code>## [1] 15.06269</code></pre>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+---
+title: "Workflows for Command Line RDPTools Output"
+author: "John Quensen"
+date: "February 12, 2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Workflows for Command Line RDPTools Output}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The purpose of this document is to demonstrate how output from the command-line version of RDPTools can be imported into `phyloseq`. Once this is done, the data can be analyzed not only using `phyloseq`'s wrapper functions, but by any method available in R.
+
+# RDPTools
+
+The RDP (formerly the Ribosomal Database Project) at Michigan State University has long provided web-based tools for processing sequencing data. These tools were originally developed for handling pyrosequencing data for bacterial and archaeal 16S rRNA genes, but since then their capabilities have been expanded to include functional genes, 28S rRNA fungal sequences, and Illumina data. To handle the increased demands of analyzing larger data sets, command line versions of the tools have been made available as `RDPTools` on GitHub (https://github.com/rdpstaff/RDPTools). With these tools sequencing data can be analyzed by either a "supervised" approach in which sequences are binned using the RDP classifier, or an "unsupervised" approach in which sequences are clustered according to their similarities. Tutorials are available on the RDP website (http://rdp.cme.msu.edu/tutorials/stats/RDPtutorial_statistics.html) and detailed instructions for the command line tools are available on GitHub.
+
+# Phyloseq
+
+`Phyloseq` is an R/Bioconductor package that provides a means of organizing all data related to a sequencing project and includes a growing number of convenience wrappers for exploratory data analysis. It also makes it easy to subset and merge both samples and taxa.   
+
+You must install Bioconductor before installing `phyloseq`. If you have not already done so, install Bioconductor in R with the following commands:  
+ 
+```
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+```
+After installing Bioconductor, install `phyloseq` with the command:  
+
+```
+biocLite("phyloseq")
+```
+
+# Importing Classifier Output (Supervised Method)
+
+The RDP classifier is provided with training sets for the classification of bacterial and archael 16S rRNA and fungal 28S rRNA and ITS gene sequences, and can classify multiple samples at one time. An example command is:  
+
+```
+java -Xmx2g -jar <path_to>/RDPTools/classifier.jar classify -g fungallsu
+  -c 0.5 -f fixrank -h test_hier.txt c:/RDP_examples/*.fasta
+```
+In this example, fungal 28S rRNA  gene sequences in directory c:/RDP_examples/ are classified with confidence 0.5. The format is fixrank, meaning that only the ranks Domain, Phylum, Class, Order, Family, and Genus will be included in the classification. There will not be any sub-classes, etc., nor any missing ranks. Results are written to the file test_hier.txt in "hierachical" format. These results are imported into `phyloseq` with the `RDPutils` function `hier2phylseq`:  
+
+```{r}
+suppressPackageStartupMessages(library("RDPutils"))
+hier.file <- system.file("extdata", "test_hier.txt", package = "RDPutils")
+class.expt <- hier2phyloseq(hier.file)
+class.expt
+rank_names(class.expt)
+```
+
+The result is a `phyloseq` object with otu and taxonomy tables. A sample data table may be added separately:  
+
+```{r}
+sample.data.file <- system.file("extdata", "WI_ext_sam.txt", package = "RDPutils")
+sam <- read.table(sample.data.file, header = TRUE, row.names = 1, sep = "\t")
+sample_data(class.expt) <- sample_data(sam, errorIfNULL = TRUE)
+class.expt
+```
+
+The classifier includes non-fungal LSU sequences to improve classification. The next step is to remove all of the non-fungal OTUs.
+
+First, get the rank names.  
+
+```{r}
+rank_names(class.expt)
+```
+
+Get unique domain names.  
+
+```{r}
+get_taxa_unique(class.expt, taxonomic.rank="Domain")
+```
+
+Subset to include only the Fungi.  
+
+```{r}
+fungi <- subset_taxa(class.expt, Domain=="Fungi")
+fungi
+get_taxa_unique(fungi, taxonomic.rank="Domain")
+```
+
+`fungi` can now be used for data analysis. It is based on fungal sequences only and contains counts for otus by sample, classification of those otus, and sample data such as treatment factors and environmental variables.  
+
+# Importing Cluster Results (Unsupervised Method)
+
+The unsupervised method is applicable to sequences that can be aligned, e.g. 16S rRNA gene sequences. The aligned sequences are clustered at specified distances to produce a "clust" file. Further processing results in an OTU table, representative sequences for each OTU, and a corresponding classification table. It is also possible with RDPTools to combine the OTU table, classification table, and a sample data table into a biom file. A tree file may also be generated from the representative sequences.  
+
+The commands below are run from a directory which contains aligned sample fasta files  inside the sub-directory `alignment`. The alignment can be created using RDP Aligners (Infernal bacterial and archaeal 16S Aligner, RDP fungal 28S Aligner, or Hmmer Aligner). Modify the path to 'Clustering.jar' as appropriate. Each command must be entered as a single line. In this document, long commands are carried over to the next line(s) and indented for readability.  
+
+A helpful hint: The aligned sample fasta files should be named exactly as you wish your samples to be named. The names should not contain prefixes or suffixes such as `aligned_` or `_trimmed` commonly introduced by previous processing steps.
+
+```
+!#/bin/bash
+
+# Complete-linkage clustering is performed by RDP's `mcClust` routine in the following three steps:
+
+# Dereplicate:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar derep -m '#=GC_RF' -o derep.fa 
+  all_seqs.ids all_seqs.samples alignment/*.fasta
+
+# Calculate distance matrix:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar dmatrix --id-mapping 
+  all_seqs.ids --in derep.fa --outfile derep_matrix.bin   -l 200 
+  --dist-cutoff 0.1
+
+# Cluster:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar cluster --dist-file 
+  derep_matrix.bin --id-mapping all_seqs.ids --sample-mapping 
+  all_seqs.samples --method complete --outfile all_seq_complete.clust
+
+# Merge the aligned fasta files:
+java -jar ~/RDPTools/AlignmentTools/dist/AlignmentTools.jar alignment   
+  -merger alignment merged_aligned.fasta
+
+# Get representative sequences renamed to match OTU names (the -c option renames them):
+java -Xmx2g -jar ~/RDPTools/Clustering.jar rep-seqs -c --id-mapping 
+  all_seqs.ids --one-rep-per-otu   all_seq_complete.clust 0.03 
+  merged_aligned.fasta
+
+# Make a biom file containing only OTUs from the cluster file for distance 0.03:
+java -Xmx2g -jar ~/RDPTools/Clustering.jar cluster-to-biom 
+  all_seq_complete.clust 0.03 > all_seq_complete.clust.biom
+
+# Add classification and sample data to the biom file. 
+java -Xmx2g -jar ~/RDPTools/classifier.jar classify -c 0.5 -f biom -m 
+  all_seq_complete.clust.biom -d sam.data.txt -o  all_seq_complete.clust_classified.biom 
+  all_seq_complete.clust_rep_seqs.fasta
+
+# Unalign sequences and remove descriptions:  
+java -Xmx2g -jar ~/RDPTools/classifier.jar to-unaligned-fasta all_seq_complete.clust_rep_seqs.fasta | cut -f1 -d ' ' > unaligned_short_names.fasta
+
+# Extract comparable (model) positions for tree building: 
+java -Xmx2g -jar ~/RDPTools/Clustering.jar derep -f -o all_seq_complete.clust_rep_seqs_modelonly.fasta rep_seqs.ids rep_seqs.sample all_seq_complete.clust_rep_seqs.fasta
+
+# Build the tree:
+fasttree -nt -gtr < all_seq_complete.clust_rep_seqs.fasta > my_expt_tree.nwk
+```
+# Processing Cluster Output
+
+Phyloseq includes a function for importing the biom, tree, and representative sequence files directly.    
+
+```{r}
+suppressMessages(suppressWarnings(library(phyloseq)))
+
+biom.file <- system.file("extdata", "all_seq_complete.clust_classified.biom",
+                        package="RDPutils")
+
+tree.file <- system.file("extdata", "my_expt_tree.nwk", package = "RDPutils")
+
+ref.seqs <- system.file("extdata", "unaligned_short_names.fasta", package = "RDPutils")
+
+clst.expt <- import_biom(biom.file, 
+  treefilename=tree.file,
+  refseqfilename=ref.seqs,
+  parseFunction=parse_taxonomy_qiime)
+
+clst.expt
+```
+
+If one is not able to use the command line RDPTools, the `RDPutils` package for R includes a vignette for creating a `phyloseq` object from a cluster file and a set of corresponding representative sequences.  
