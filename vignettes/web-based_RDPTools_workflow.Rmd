@@ -1,0 +1,187 @@
+---
+title: "Workflows for Web-based RDPTools Output"
+author: "John Quensen"
+date: "February 11, 2018"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Workflows for Web-based RDPTools Output}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This package provides means to construct `phyloseq` objects from the output of RDP's tools for clustering and classifying DNA sequences from high-throughput amplicon sequencing projects. This document applies primarily to working with output from the web-based tools. For a workflow more specific to using output from the command-line version of RDPTools, see ***. 
+
+The Ribosomal Database Project (RDP) provides both web-based and command line tools for processing rRNA gene sequences from Bacteria, Archae, and Fungi as well as functional genes.  Web-based tools and tutorials for using them are available at http://rdp.cme.msu.edu/index.jsp.  The command line tools are available at https://github.com/rdpstaff/RDPTools. Processing can take either of two approaches.  In the "supervised" approach, sequences from multiple samples are binned by classifying them using a database for Bacteria or Archae or Fungi, or a user's own database, and further processing is usually done in a spreadsheet program.  In the "unsupervised" approach, sequences are clustered into OTUs based on their degree of similarity.   RDP provides additional tools to parse the cluster files into OTU tables that can be imported into R, and to retrieve representative sequences for each cluster.  
+
+`phyloseq` is an R/Bioconductor package that includes a variety of wrappers for quick exploratory data analysis of sequencing data, but perhaps its most convenient feature is that it provides a means of rapid and flexible sub-setting of data from a large experiment.  A `phyloseq` object has slots for an OTU table, a classification table, a sample data table, a tree of the sequences representing each OTU, and the representative sequences themselves.  I recommend `phyloseq` because it organizes all data for an experiment and R because it provides a flexible means of analyzing that data.
+
+The functions in this package reformat RDP output so that it is possible to fill `phyloseq` slots.  In the case of the supervised approach, the RDP classifier result is reformatted directly into a `phyloseq` object containing an OTU table and a classification table.  For the unsupervised approach, the OTU table can be the result from the RDP R-formatter tool, or from a function in this package. The key to filling the classification table and tree slots is to rename the representative sequences to correspond to the OTU names; this package includes functions to do this.  Once renamed, the representative sequences can be classified and treed, and the results used to fill `phyloseq` classification table and tree slots.  For either approach, a sample data table is most easily constructed in a spreadsheet program.
+
+Below are example workflows for both supervised and unsupervised approaches.
+
+```{r, echo=FALSE}
+suppressWarnings(suppressPackageStartupMessages(library(RDPutils)))
+```
+
+**Note:**  
+ 
+Input to some of the functions in this package are text files read from disk, normally in practice from your R working directory.  But for the examples to work, it is necessary to use the `system.file` command to get the path plus file name in the R installation.   This is assigned to a variable, and that variable is used as a function argument in place of what a user would normally enter enclosed in parentheses.  For example, while the following works as an example:  
+
+```{r, eval=FALSE}
+clstr.file <- system.file("extdata", "all_seq_complete.clust",
+                          package="RDPutils")
+otu <- clstr2otu(clstr_file=clstr.file, dist=0.03, OutFile=TRUE,
+                 file_name= "dist_03.clust")
+```
+
+a user would normally type:  
+
+```{r, eval=FALSE}
+otu <- clstr2otu(clstr_file = "all_seq_complete.clust", dist = 0.03,
+                 OutFile = FALSE, file_name = "dist_03.clust")
+```
+
+# Workflow for Cluster Results
+
+RDP's unsupervised method involves aligning rRNA sequences using the structure-aware Infernal aligner, calculating distances between sequences, and then clustering them, by default, by the complete linkage method.  The result is a large "clust" file giving the numbers and names of every sequence in every cluster for every sample for several distances, from 0 to 0.15 by default. The R-formatter tool parses the cluster file into tab-delimited OTU tables for each distance with samples as rows and OTUs as columns.  These can be easily imported into R with the base function `read.table`.
+
+Cluster files may also be parsed into an OTU table for a specific distance with `clstr2otu`.  This function also gives the option of excising the portion of the larger cluster file that corresponds to the same specific distance, as in this example:  
+
+```{r}
+library(RDPutils)
+clstr.file <- system.file("extdata", "all_seq_complete.clust", 
+                          package="RDPutils")
+otu <- clstr2otu(clstr_file=clstr.file, dist=0.03, 
+                 OutFile=TRUE, file_name= "dist_03.clust")
+otu[ , 1:5] 
+```
+
+
+Here, `clstr.file` is the name of the cluster file, retrieved from the examples provided for `RDPutils`.  Again, normally, the user would enter the cluster file name `all_seq_complete.clust` within quotation marks in its place.  Since OutFile is `TRUE`, a cluster file for the distance 0.03 is written to the file `dist_03.clust`.  The result, `otu`, is of course the OTU table.  The sample names have been simplified by removing common prefixes and suffixes introduced by the RDP pipeline.  
+
+Compare this to importing the text file from the R-formatter:  
+
+```{r}
+rformatfile <- system.file("extdata", "rformat_dist_0.03.txt", 
+                           package="RDPutils")
+otu.rdp <- read.table(rformatfile, header=TRUE, row.names=1, 
+                      sep="\t")
+otu.rdp[ , 1:5]
+```
+
+The result is the same, except for the order of the samples, which of course can be sorted:  
+
+```{r}
+otu.rdp <- otu.rdp[sort(rownames(otu.rdp)), ]
+otu.rdp[ , 1:5]
+```
+
+In order to assign taxonomy to the OTUs, it is necessary to rename the representative sequences with the OTU names.  After mid-2013, the tools to retrieve representative sequences include the cluster (or OTU) number in the fasta IDs.  
+
+If retrieved with the on-line tool, they have the form:
+
+`>HC9DO0P01BCTC4 cluster_id=1,size=2`
+
+If retrieved with the command line tool in RDPTools, they have the form:
+
+`>HC9DO0P01BCTC4 prefered=false,cluster=0,clustsize=2`
+
+`>FTJQVTM02FQW3E  prefered=false,cluster=1,clustsize=7,maxDist=0.02917,minSumSquare=0.00191`  
+
+In these cases, it is possible to make an association between the representative sequence IDs and the OTU names with the function `assoc_repseq_IDs_with_otus_by_fasta`:  
+
+
+```{r}
+repseq.file <- system.file("extdata", 
+               "all_seq_complete.clust_rep_seqs.fasta", 
+                package="RDPutils")
+assoc.table <- assoc_repseq_IDs_with_otus_by_fasta(repseq_file = 
+                                                     repseq.file)
+head(assoc.table)
+```
+
+If the fasta IDs of the representative sequences do not meet the conditions above, the association between OTUs and representative sequences can be obtained from the cluster file.  This method is more involved and takes longer to run.  First it is necessary to get a list of the machine names of the representative sequences and use that list as input to  the function `assoc_repseq_IDs_with_otus_by_clstr`:  
+
+```{r}
+repseq.file <- system.file("extdata", 
+                           "all_seq_complete.clust_rep_seqs.fasta", 
+                           package="RDPutils")
+rep.seqs <- get_repseq_IDs_from_fasta(repseq_file = repseq.file)
+clstr <- system.file("extdata", "dist_03.clust", package="RDPutils")
+assoc.table <- assoc_repseq_IDs_with_otus_by_clstr(clstr_file=clstr, 
+                                                   rep_seqs=rep.seqs)
+head(assoc.table)
+```
+
+Once the `assoc.table` is made, it can be used to rename the representative sequences.  But first, it is necessary to trim the IDs of the representative sequences to contain only the machine names.  
+
+```{r}
+repseq.file <- system.file("extdata", 
+                           "all_seq_complete.clust_rep_seqs.fasta", 
+                           package="RDPutils")
+trim_fasta_names(repseq_file = repseq.file, 
+                 trimmed_names = "names_trimmed.fasta", strip = FALSE)
+rename_fasta(in_file = "names_trimmed.fasta", out_file = "renamed.fasta", 
+             rename_table = assoc.table)
+```
+
+After renaming, the representative sequences can be classified and the detailed fixrank format from the classifier converted into a `phyloseq` `tax_table` with the function `make_tax_table`.  
+
+```{r}
+my.in.file <- system.file("extdata", "fixrank_classified.txt", package="RDPutils")
+my.tax.table <- make_tax_table(in_file = my.in.file, confidence=0.5)
+head(my.tax.table)
+```
+
+The renamed representative sequences can also be treed, with FastTree for example, and the result included in a `phyloseq` object.  Once this is done, a `phyloseq` object can be created.  In the example below, sam.data is a simple dataframe including information about each sample, and `rep.tree.nwk` is a tree of the renamed representative sequences in Newick format.  Nexus format is also acceptable.  The `read_tree` function converts either to a phylo class object.  
+
+```{r}
+data(sam.data)
+sam.data
+rep.tree <- system.file("extdata", "rep.tree.nwk", package="RDPutils")
+my.tree <- read_tree(rep.tree)
+my.otu <- otu_table(as.matrix(t(otu)), taxa_are_rows=TRUE, errorIfNULL=TRUE)
+my.data <- sample_data(sam.data)
+my.expt <- phyloseq(my.otu, my.tax.table, my.data, my.tree)
+my.expt
+```
+
+# Workflow for Classifier Results
+
+RDP's web-based classifier for multiple samples is available at https://pyro.cme.msu.edu/classifier/form.spr, i.e. the version that is part of the RDP Pipeline (http://pyro.cme.msu.edu/). Databases are provided for bacterial and archaeal 16S rRNA, fungal 28S rRNA, and fungal ITS2 gene sequences. Results are downloaded as a compressed file containing several files including `hierachy.txt` and, in the case of 16S rRNA gene sequences,  `cnadjusted_hierarchy.txt`. Counts in the latter are adjusted for 16S rRNA copy number. Either of these files can be imported into a `phyloseq` object containing an OTU table and taxonomy table with the function `hier2phyloseq`. This importer does not work with output from the web-based RDP classier available at http://rdp.cme.msu.edu/classifier/classifier.jsp; that version is for classification of sequences in a single sample.       
+
+As an example:  
+
+```{r}
+hier.file <- system.file("extdata", "test_hier.txt", package="RDPutils")
+expt <- hier2phyloseq(hier_file=hier.file)
+expt
+```
+
+This example is for 28S rRNA gene sequences and the aim is to analyze fungal communities.  Domains other than fungi have been included in the data base to improve classification.  The domains represented in the data can be determined thus:
+
+```{r}
+rank_names(expt)
+get_taxa_unique(expt, taxonomic.rank = "Domain")
+```
+
+The data can be subset to include only the fungal sequences thus:  
+
+```{r}
+fungi <- subset_taxa(expt, Domain=="Fungi")
+fungi
+```
+
+and the percentage of non-fungal sequences is determined as:  
+
+```{r}
+expt.sum <- sum(otu_table(expt))
+fungi.sum <- sum(otu_table(fungi))
+100*((expt.sum-fungi.sum)/expt.sum)
+```
