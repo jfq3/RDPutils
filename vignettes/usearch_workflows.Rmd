@@ -15,9 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The `UPARSE` pipeline implemented in `USEARCH` is an attractive alternative method because of its much greater speed and smaller memory requirements.  `RDPutils` version 1.3 adds several functions for importing `USEARCH/UPARSE` output as `phyloseq` otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
+Illumina's MiSeq sequencing platform is capable of generating much larger data sets than Roche's older 454 pyrosequencing method. Processing these large data sets using RDPTools' complete linkage clustering method is impractical because of the large computer memory and long run times required.  The `UPARSE` pipeline implemented in `USEARCH` is an attractive alternative method because of its much greater speed and smaller memory requirements.  `RDPutils` version 1.3 added several functions for importing `USEARCH/UPARSE` output as `phyloseq` otu and taxonomy tables. The otu sequences may also be imported as reference sequences.    
 
-`USEARCH` is available as a free 32-bit version and a paid 64-bit version. The 32-bit version has a 4 Gb memory limit which prevents dereplicating and clustering data from larger experiments. Presently the latest 64-bit version available on MSU's HPCC is 8.1, so I have written the script below to be run with` USEARCH 8.1` with one exception. For comparison, I have included classification using the `sintax` command new beginning with `USEARCH` version 9. The memory requirement for classification is small enough that the 32-bit version of the program can be used. 
+`USEARCH` is available as a free 32-bit version and a paid 64-bit version. The 32-bit version has a 4 GB memory limit which prevents dereplicating and clustering data from larger experiments. Presently the latest 64-bit version available on MSU's HPCC is 8.1, so I have written the script below to be run with` USEARCH 8.1` with one exception. For comparison, I have included classification using the `sintax` command new beginning with `USEARCH` version 9. The memory requirement for classification is small enough that the 32-bit version of the program can be used. 
 Beginning with merged and trimmed sequences from all samples catenated together into 
 `all_samples.fasta`, an example script for processing 16S data on MSU's HPCC is:  
 
@@ -105,7 +105,7 @@ head(otu)
 class(otu)
 ```
 
-The `biom` file containing only the OTU table can be read in with `phyloseq`'s `import_biom` function provided a modified `parseFunction` is given. The `USEARCH` taxonomy files should be broken on commas.    
+The `biom` file containing only the OTU table can be read in with `phyloseq`'s `import_biom` function provided a modified `parseFunction` is given. The `USEARCH` taxonomy fields should be broken on commas.    
 
 ```{r}
 parse_taxonomy_usearch <- function (char.vec){

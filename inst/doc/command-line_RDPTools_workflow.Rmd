@@ -40,13 +40,13 @@ biocLite("phyloseq")
 
 # Importing Classifier Output (Supervised Method)
 
-The RDP classifier is provided with training sets for the classification of bacterial and archael 16S rRNA and fungal 28S rRNA and ITS gene sequences, and can classify multiple samples at one time. An example command is:  
+The RDP classifier is provided with training sets for the classification of bacterial and archaeal 16S rRNA and fungal 28S rRNA and ITS gene sequences, and can classify multiple samples at one time. An example command is:  
 
 ```
 java -Xmx2g -jar <path_to>/RDPTools/classifier.jar classify -g fungallsu
   -c 0.5 -f fixrank -h test_hier.txt c:/RDP_examples/*.fasta
 ```
-In this example, fungal 28S rRNA  gene sequences in directory c:/RDP_examples/ are classified with confidence 0.5. The format is fixrank, meaning that only the ranks Domain, Phylum, Class, Order, Family, and Genus will be included in the classification. There will not be any sub-classes, etc., nor any missing ranks. Results are written to the file test_hier.txt in "hierachical" format. These results are imported into `phyloseq` with the `RDPutils` function `hier2phylseq`:  
+In this example, fungal 28S rRNA  gene sequences in directory c:/RDP_examples/ are classified with confidence 0.5. The format is fixrank, meaning that only the ranks Domain, Phylum, Class, Order, Family, and Genus will be included in the classification. There will not be any sub-classes, etc., nor any missing ranks. Results are written to the file `test_hier.txt` in "hierarchical" format. These results are imported into `phyloseq` with the `RDPutils` function `hier2phylseq`:  
 
 ```{r}
 suppressPackageStartupMessages(library("RDPutils"))
@@ -98,7 +98,7 @@ The commands below are run from a directory which contains aligned sample fasta 
 A helpful hint: The aligned sample fasta files should be named exactly as you wish your samples to be named. The names should not contain prefixes or suffixes such as `aligned_` or `_trimmed` commonly introduced by previous processing steps.
 
 ```
-!#/bin/bash
+#!/bin/bash
 
 # Complete-linkage clustering is performed by RDP's `mcClust` routine in the following three steps:
 

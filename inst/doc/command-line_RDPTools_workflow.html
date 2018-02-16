@@ -93,10 +93,10 @@ biocLite()</code></pre>
 </div>
 <div id="importing-classifier-output-supervised-method" class="section level1">
 <h1>Importing Classifier Output (Supervised Method)</h1>
-<p>The RDP classifier is provided with training sets for the classification of bacterial and archael 16S rRNA and fungal 28S rRNA and ITS gene sequences, and can classify multiple samples at one time. An example command is:</p>
+<p>The RDP classifier is provided with training sets for the classification of bacterial and archaeal 16S rRNA and fungal 28S rRNA and ITS gene sequences, and can classify multiple samples at one time. An example command is:</p>
 <pre><code>java -Xmx2g -jar &lt;path_to&gt;/RDPTools/classifier.jar classify -g fungallsu
   -c 0.5 -f fixrank -h test_hier.txt c:/RDP_examples/*.fasta</code></pre>
-<p>In this example, fungal 28S rRNA gene sequences in directory c:/RDP_examples/ are classified with confidence 0.5. The format is fixrank, meaning that only the ranks Domain, Phylum, Class, Order, Family, and Genus will be included in the classification. There will not be any sub-classes, etc., nor any missing ranks. Results are written to the file test_hier.txt in “hierachical” format. These results are imported into <code>phyloseq</code> with the <code>RDPutils</code> function <code>hier2phylseq</code>:</p>
+<p>In this example, fungal 28S rRNA gene sequences in directory c:/RDP_examples/ are classified with confidence 0.5. The format is fixrank, meaning that only the ranks Domain, Phylum, Class, Order, Family, and Genus will be included in the classification. There will not be any sub-classes, etc., nor any missing ranks. Results are written to the file <code>test_hier.txt</code> in “hierarchical” format. These results are imported into <code>phyloseq</code> with the <code>RDPutils</code> function <code>hier2phylseq</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">&quot;RDPutils&quot;</span>))
 hier.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;test_hier.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RDPutils&quot;</span>)
 class.expt &lt;-<span class="st"> </span><span class="kw">hier2phyloseq</span>(hier.file)
@@ -143,7 +143,7 @@ fungi</code></pre></div>
 <p>The unsupervised method is applicable to sequences that can be aligned, e.g. 16S rRNA gene sequences. The aligned sequences are clustered at specified distances to produce a “clust” file. Further processing results in an OTU table, representative sequences for each OTU, and a corresponding classification table. It is also possible with RDPTools to combine the OTU table, classification table, and a sample data table into a biom file. A tree file may also be generated from the representative sequences.</p>
 <p>The commands below are run from a directory which contains aligned sample fasta files inside the sub-directory <code>alignment</code>. The alignment can be created using RDP Aligners (Infernal bacterial and archaeal 16S Aligner, RDP fungal 28S Aligner, or Hmmer Aligner). Modify the path to ‘Clustering.jar’ as appropriate. Each command must be entered as a single line. In this document, long commands are carried over to the next line(s) and indented for readability.</p>
 <p>A helpful hint: The aligned sample fasta files should be named exactly as you wish your samples to be named. The names should not contain prefixes or suffixes such as <code>aligned_</code> or <code>_trimmed</code> commonly introduced by previous processing steps.</p>
-<pre><code>!#/bin/bash
+<pre><code>#!/bin/bash
 
 # Complete-linkage clustering is performed by RDP's `mcClust` routine in the following three steps:
 
