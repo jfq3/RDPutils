@@ -18,7 +18,7 @@ match_taxa_machine_names.txt from my FunGene Pipeline script
 }
 }
 \details{
-My FunGene pipeline script produces one file matching representative sequence machine names with cluster numbers and a second matching representative sequence machine names with taxa names found by FrameBot. This function parses and combines the two files to produce a phyloseq tax_table. Ranks are Genus, Species, and Strain. Classification is the closest match to sequence in the FrameBot reference database.
+My FunGene pipeline script (see john-quensen.com) produces one file matching representative sequence machine names with cluster numbers and a second matching representative sequence machine names with taxa names found by FrameBot. This function parses and combines the two files to produce a phyloseq tax_table. Ranks are Genus, Species, and Strain. Classification is the closest match to sequence in the FrameBot reference database. The percent identity to the closest match is appended to the name of the closest match (strain level in the tax_table).
 }
 \value{
 A tax_table of class phyloseq.
@@ -30,7 +30,8 @@ John Quensen
 See the workshop page Command Line FunGene Pipeline at john-quensen.com for the FunGene Pipeline script.
 }
 \examples{
-##---- Not run ----
-##-- my_tax <- make_framebot_tax_table(clstr_machine="match_cluster_machine_name.txt", taxa_machine="match_taxa_machine_names.txt") 
+match.clst <- system.file("extdata", "match_cluster_machine_name.txt", package="RDPutils")
+match.taxa <- system.file("extdata", "match_taxa_machine_names.txt", package="RDPutils")
+my_taxa <- make_framebot_tax_table(clstr_machine=match.clst, taxa_machine=match.taxa) 
 }
 

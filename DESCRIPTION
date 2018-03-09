@@ -1,8 +1,8 @@
 Package: RDPutils
 Type: Package
 Title: R Utilities for Processing RDPTool Output
-Version: 1.4.0
-Date: 2018-02-12
+Version: 1.4.1
+Date: 2018-03-08
 Author: John Quensen
 Maintainer: John Quensen <quensenj@msu.edu>
 Depends: phyloseq, reshape2, Biostrings, R (>= 3.2.0)
