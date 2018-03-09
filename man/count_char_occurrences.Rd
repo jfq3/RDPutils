@@ -1,7 +1,7 @@
 \name{count_char_occurrences}
 \alias{count_char_occurrences}
 \title{
-count_char_occurrences
+Count Occurrences of a Character
 }
 \description{
 Count the number of occurrences of a character in a string.
