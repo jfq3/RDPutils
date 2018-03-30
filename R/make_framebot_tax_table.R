@@ -10,7 +10,7 @@ make_framebot_tax_table <- function(clstr_machine="match_cluster_machine_name.tx
     taxonomy_table[i,"genus"] <- strsplit(taxonomy_table[i,"strain"],"_")[[1]][1]
     taxonomy_table[i,"species"] <- strsplit(taxonomy_table[i,"strain"],"_")[[1]][2]
   }
-  taxonomy_table <- taxonomy_table[ , c("genus", "species", "strain")]
+  taxonomy_table <- taxonomy_table[ , c("Genus", "Species", "Strain")]
   taxonomy_table <- tax_table(as.matrix(taxonomy_table), errorIfNULL = TRUE)
   return(taxonomy_table)
 }
