@@ -5,10 +5,7 @@
 #' @return A vector of digits
 #' @export
 #' @details Useful in reformating OTU/taxa names, sometimes necessary to merge phyloseq objects.
-#' @examples
-#' otu.names <- c("cluster_1), "cluster_2", "cluster_3")
-#' digits <- get_digits(otu.names)
-#' make_otu_names(digits, otu_format = "R")
+
 
 get_digits <- function(otu.names) {
   num <- vector(mode = "integer", length = length(otu.names))
