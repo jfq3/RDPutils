@@ -11,6 +11,7 @@
 #' make_otu_names(digits, otu_format = "R")
 
 get_digits <- function(otu.names) {
+  num <- vector(mode = "integer", length = length(otu.names))
   for (i in 1:length(otu.names)) {
     temp <- strsplit(otu.names[i], split = "_")[[1]]
     num[i] <- temp[2]
