@@ -13,3 +13,4 @@ Description: Parses OTU tables from RDP cluster files; associates OTU
   representative sequences with OTU names; converts RDP and USEARCH classifier 
   outputs to phyloseq objects.
 License: GPL-2
+RoxygenNote: 6.1.0
