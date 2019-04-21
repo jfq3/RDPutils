@@ -40,7 +40,7 @@ OTUs may be named in either of two formats, corresponding to those output by the
 \value{
 This function returns a data frame.  The first column contains the machine names 
 	of the representative sequences.  The second column contains the names of the 
-	corresponding OTUs as given by clstr2otu, by RDP's web-based Cluster File Formatter with optons "R" or "biom", 
+	corresponding OTUs as given by clstr2otu, by RDP's web-based Cluster File Formatter with options "R" or "biom", 
 	and by the command line version of function Cluster in RDPTools.  The third 
 	column contains sample names and the fourth the number of sequences in the
   OTU for the sample in column three.  These last two columns are provided as a 
