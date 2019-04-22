@@ -39,7 +39,7 @@ make_tax_table <- function(in_file="fixrank_classified.txt", confidence=0.5) {
   for (i in  1:nrow(class.table)) {
     if (class.table[i, 2] < confidence) {
       class.table[i, 2] <- 1
-      class.table[i, 1] <- paste("unclassified", first.rank, sep = "_")
+      class.table[i, 1] <- paste("uncl", first.rank, sep = "_")
     }
   }
   
@@ -49,8 +49,8 @@ make_tax_table <- function(in_file="fixrank_classified.txt", confidence=0.5) {
     for (j in col.no) {
       if (class.table[i, j] < confidence) {
         class.table[i, j] <- 1
-        if(substr(class.table[i, (j-3)], 1, 7)=="unclass") {class.table[i, (j-1)] <- class.table[i, (j-3)]}
-        else {class.table[i, (j-1)] <- paste("unclassified_", class.table[i, (j-3)], sep="")}
+        if(substr(class.table[i, (j-3)], 1, 4)=="uncl") {class.table[i, (j-1)] <- class.table[i, (j-3)]}
+        else {class.table[i, (j-1)] <- paste("uncl", class.table[i, (j-3)], sep="_")}
       }
     }
   }
