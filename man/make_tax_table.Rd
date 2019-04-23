@@ -8,12 +8,15 @@ Make a Phyloseq tax_table from Classifier Result
 This function creates a phyloseq tax_table from the RDP classifier result (detail format) for renamed representative sequences.
 }
 \usage{
-make_tax_table(in_file="fixrank_classified.txt", confidence=0.5)
+make_tax_table(in_file="fixrank_classified.txt", ragged = FALSE, confidence=0.5)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{in_file}{
 File name for RDP classifier result in detail format.
+}
+  \item{ragged}{
+A logical. If FALSE (the default), fills in unidentified taxa with "unlc_" prependend to identified higher order taxa.
 }
   \item{confidence}{
 Confidence level for construction of tax_table.

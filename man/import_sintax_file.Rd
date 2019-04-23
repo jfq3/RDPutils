@@ -8,15 +8,18 @@ Import sintax Taxonomy File
 Converts the tab-delimited output of USEARCH's (version 9+) sintax command to a phyloseq tax_table object. The confidence level for taxonomic assignment is chosen on import.
 }
 \usage{
-import_sintax_file(in_file, confidence = 0.8)
+import_sintax_file(in_file, ragged = FALSE, confidence = 0.8)
 }
 
 \arguments{
   \item{in_file}{
     A sintax file.
 }
+  \item{ragged}{
+    A logical. If FALSE (the default), fills in unidentified taxa with "unlc_" prependend to identified higher order taxa.
+}
   \item{confidence}{
-    The confidence level to use in assigning taxonomic categories
+    The confidence level to use in assigning taxonomic categories.
 }
 }
 \details{

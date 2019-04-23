@@ -1,4 +1,4 @@
-import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
+import_utax_file <- function (in_file = "utax_file.txt", ragged = FALSE, confidence = 0.8) {
   # Read in utax file.
   temp <- read.table(file = in_file, sep = "\t", fill = TRUE, stringsAsFactors = FALSE)
   # Extract otu names.
@@ -67,25 +67,36 @@ import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
     }
   }
   
-  # Replace IDs where highest rank is unidentfied.
+  #Replace IDs where first rank is unidentfied.
   for (i in  1:nrow(class.table)) {
     if (class.table[i, 2] < confidence) {
       class.table[i, 2] <- 1
-      class.table[i, 1] <- paste("uncl_", class.table[i, 1], sep="")
+      if (ragged) {
+        class.table[i, 1] <- ""
+      } else {
+        class.table[i, 1] <- paste("uncl", class.table[i, 1], sep = "_")
+      }
     }
   }
   
-  # Replace IDs where confidence is less than specified confidence:
-  # col.no <- seq(from=3, to=ncol(class.table)-1, by=2)
+  #Replace IDs where confidence is less than specified confidence:
+  col.no <- seq(from=4, to=ncol(class.table), by=2)
   for (i in 1:nrow(class.table)) {
-    for (j in conf.col.no[-1]) {
+    for (j in col.no) {
       if (class.table[i, j] < confidence) {
         class.table[i, j] <- 1
-        if(substr(class.table[i, (j-3)], 1, 5)=="uncl_") {
-          class.table[i, (j-1)] <- class.table[i, (j-3)]
-        }
-        else {
-          class.table[i, (j-1)] <- paste("uncl_", class.table[i, (j-3)], sep="")
+        if (ragged) {
+          if (substr(class.table[i, (j-3)], 1, 4)=="uncl") {
+            class.table[i, (j-1)] <- ""
+          } else {
+            class.table[i, (j-1)] <- ""
+          }
+        } else {
+          if(substr(class.table[i, (j-3)], 1, 4)=="uncl") {
+            class.table[i, (j-1)] <- class.table[i, (j-3)]
+          } else {
+            class.table[i, (j-1)] <- paste("uncl", class.table[i, (j-3)], sep="_")
+          }
         }
       }
     }
