@@ -26,7 +26,7 @@ A third properly formatted taxonomy table.
 The order of the three taxonomy tables does not matter. Returns a consensus taxonomy table. This is the final step in the CONSTAX workflow.
 }
 \value{
-A taxonomy table of class matrix.
+A phyloseq tax_table object.
 }
 \references{
 Gdanetz, K., Benucci, G.M.N., Pol, N.V., and Bonito, G. (2017). CONSTAX: a tool for improved taxonomic resolution of environmental fungal ITS sequences. Bmc Bioinformatics 18. doi: 10.1186/s12859-017-1952-x.

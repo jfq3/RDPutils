@@ -17,5 +17,6 @@ get_consensus <- function(tab.a, tab.b, tab.c) {
       new.table[i,j] <-vote(tax.vec)
     }
   }
+  new.table <- tax_table(new.table)
   return(new.table)
 }
