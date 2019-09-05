@@ -14,3 +14,4 @@ Description: Parses OTU tables from RDP cluster files; associates OTU
   outputs to phyloseq objects.
 License: GPL-2
 RoxygenNote: 6.1.0
+URL: https://github.com/jfq3/RDPutils
