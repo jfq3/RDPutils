@@ -18,5 +18,5 @@ A phyloseq object with reformatted taxa names
 Reformat Taxa Names
 }
 \details{
-Format string is either "R" (the default) or "biom", corresponding to the format returned by RDPTools.
+Format string is either "R" (the default) or "biom", corresponding to the formats returned by RDPTools.
 }
