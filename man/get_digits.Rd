@@ -16,5 +16,5 @@ A vector of digits
 Get digits
 }
 \details{
-Useful in reformating OTU/taxa names, sometimes necessary to merge phyloseq objects.
+Useful in reformatting OTU/taxa names, sometimes necessary to merge phyloseq objects.
 }
