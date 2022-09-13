@@ -30,3 +30,5 @@ Icon
 *.tex
 .RData
 .Rhistory
+doc
+Meta
