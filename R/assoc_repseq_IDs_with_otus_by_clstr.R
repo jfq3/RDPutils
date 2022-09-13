@@ -4,6 +4,7 @@
 #' @param clstr_file The name of a cluster file for a single distance.
 #' @param rep_seqs A vector of representative sequence machine names.
 #' @param otu_format When equal to "R" (default) OTU names have the form "OTUxxxnn."  When equal to "biom", OTU names have the form "cluster_nn."
+#' @export
 #' @details 
 #' The first input to this function is the name of a cluster file for a single distance. The function reads the cluster file from disk. The cluster file for a single distance is excised from the original cluster file which likely contained cluster information for several distances with either of the functions clstr2otu or split_clstr_file. 
 #' The second input to this function is a vector of representative sequence machine names corresponding to the input cluster file; that is, they are for the same distance.  This vector is created from a fasta file of the representative sequences with the function get_repseq_IDs_from_fasta. 

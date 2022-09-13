@@ -9,6 +9,7 @@
 #' Representative sequences from clusters for a given distance may be obtained with either the web-based representative sequence tool currently on the rdpipeline page (http://pyro.cme.msu.edu/), or with the RDPTools' cluster function using a command similar to:
 #' java -Xmx2g -jar $Clustering rep-seqs --one-rep-per-otu all_seq_complete.clust 0.03 merged_aligned.fasta
 #' In these cases the fasta headers contain information on the cluster number and the size of the cluster.  This function parses this information into a table that can be used as input to function rename_fasta, which renames the representative sequences with their corresponding OTU names.
+#' @export
 #' @returns This function returns a data frame with 4 columns: the machine name of the representative sequence, the corresponding OTU name as given by RDP's cluster file formatter with options "R" or "biom" and by function clstr2otu in this package, the cluster number, and the total number of sequences in the cluster (cluster size).
 #' @author John Quensen
 #' @note 

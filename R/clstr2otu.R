@@ -12,6 +12,7 @@
 #' This function can take several minutes, depending on the number of OTUs and samples.  The cluster file for a single distance output by the function can be used to associate the OTU names in the OTU table produced with the representative sequence machine names.
 #' The sample names are shortened by removing common prefixes and suffixes introduced by RDP's tools.  These include "nc_", "aligned_", "_trimmed", ".fasta" and ".fastq."
 #' The two OTU formats correspond to those output by the RDP's cluster file formatter, which has the options "R"" and "biom."  With option "R," OTU names begin with "OTU" and are padded to equal length with leading zeros, e.g. "OTU00067."  Thus they can be sorted in numerical order.  With option "biom," OTU names begin with "cluster_" and are not padded with leading zeros, e.g "cluster_67." 
+#' @export
 #' @returns Returns a numerical data frame, or OTU table, where samples are rows and OTUs are columns.  This is the convention used by vegan.  To import the result into phyloseq, it should first be transposed and converted to class matrix.
 #' @references 
 #' RDP web-based clustering services and tutorials on clustering sequence data are available at: http://rdp.cme.msu.edu/
