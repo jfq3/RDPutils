@@ -3,6 +3,7 @@
 export(assoc_repseq_IDs_with_otus_by_clstr)
 export(assoc_repseq_IDs_with_otus_by_fasta)
 export(clstr2otu)
+export(count_char_occurrences)
 export(get_digits)
 export(reformat_taxa_names)
 export(simple_cap)

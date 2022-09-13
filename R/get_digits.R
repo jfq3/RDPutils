@@ -4,7 +4,7 @@
 #'
 #' @return A vector of digits
 #' @export
-#' @details Useful in reformating OTU/taxa names, sometimes necessary to merge phyloseq objects.
+#' @details Useful in reformatting OTU/taxa names, sometimes necessary to merge phyloseq objects.
 
 
 get_digits <- function(otu.names) {
