@@ -94,6 +94,6 @@ import_sintax_file <- function (in_file = "sintax_file.txt", confidence = 0.8) {
   colnames(class.table) <- taxa
   # Convert to phyloseq tax_table
   class.table <- as.matrix(class.table)
-  class.table <- tax_table(class.table, errorIfNULL = TRUE)
+  class.table <- phyloseq::tax_table(class.table, errorIfNULL = TRUE)
   return(class.table)
 }
