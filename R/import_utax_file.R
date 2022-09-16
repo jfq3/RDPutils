@@ -1,3 +1,19 @@
+#' @title Import utax Taxonomy File
+#' @name import_utax_file
+#' @aliases import_utax_file
+#' @description Converts the tab-delimited output of USEARCH's utax command to a phyloseq tax_table object. The confidence level for taxonomic assignment is chosen on import.
+#' @usage import_utax_file(in_file, confidence)
+#' @param in_file The utaxout result from USEARCH's utax command.
+#' @param confidence The confidence level to use in assigning taxonomic categories.
+#' @details The default confidence level is 0.8.
+#' @returns A phyloseq tax_table.
+#' @author John Quensen
+#' @export
+#' @examples 
+#' ##---- Not run. ----
+#' ##-- tax.table <- import_utax_file(in_file="utax_result.txt", confidence = 0.8)
+#' @keywords USEARCH
+
 import_utax_file <- function (in_file = "utax_file.txt", confidence = 0.8) {
   # Read in utax file.
   temp <- read.table(file = in_file, sep = "\t", fill = TRUE, stringsAsFactors = FALSE)
