@@ -1,18 +1,19 @@
-#' @title Import utax Taxonomy File
-#' @name import_utax_file
-#' @aliases import_utax_file
-#' @description Converts the tab-delimited output of USEARCH's utax command to a phyloseq tax_table object. The confidence level for taxonomic assignment is chosen on import.
-#' @usage import_utax_file(in_file, confidence)
-#' @param in_file The utaxout result from USEARCH's utax command.
-#' @param confidence The confidence level to use in assigning taxonomic categories.
-#' @details The default confidence level is 0.8.
+#' @title Create a FrameBot Taxonomy Table
+#' @name make_framebot_tax_table
+#' @aliases make_framebot_tax_table
+#' @description Create a taxonomy table from FunGene Pipeline output.
+#' @usage make_framebot_tax_table(clstr_machine, taxa_machine)
+#' @param clstr_machine match_cluster_machine_name.txt from my FunGene Pipeline script
+#' @param taxa_machine match_taxa_machine_names.txt from my FunGene Pipeline script
+#' @details My FunGene pipeline script (see john-quensen.com) produces one file matching representative sequence machine names with cluster numbers and a second matching representative sequence machine names with taxa names found by FrameBot. This function parses and combines the two files to produce a phyloseq tax_table. Ranks are Genus, Species, and Strain. Classification is the closest match to sequence in the FrameBot reference database. The percent identity to the closest match is appended to the name of the closest match (strain level in the tax_table).
+#' @note See the workshop page Command Line FunGene Pipeline at john-quensen.com for the FunGene Pipeline script.
 #' @returns A phyloseq tax_table.
 #' @author John Quensen
 #' @export
 #' @examples 
-#' ##---- Not run. ----
-#' ##-- tax.table <- import_utax_file(in_file="utax_result.txt", confidence = 0.8)
-#' @keywords USEARCH
+#' match.clst <- system.file("extdata", "match_cluster_machine_name.txt", package="RDPutils")
+#' match.taxa <- system.file("extdata", "match_taxa_machine_names.txt", package="RDPutils")
+#' my_taxa <- make_framebot_tax_table(clstr_machine=match.clst, taxa_machine=match.taxa)
 
 make_framebot_tax_table <- function(clstr_machine="match_cluster_machine_name.txt", taxa_machine="match_taxa_machine_names.txt") {
   clstr_machine <- read.table(file=clstr_machine, header = FALSE, stringsAsFactors = FALSE, sep="\t")
